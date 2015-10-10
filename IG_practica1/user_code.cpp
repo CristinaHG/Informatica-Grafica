@@ -91,64 +91,18 @@ void draw_puntos(vertices* ver, int n_v, int grosor) {
 void draw_arista_solido(solido *malla, float r, float g, float b, int modo, int grosor) {
     glColor3f(r, g, b);
     glPointSize(grosor);
+    
     if (modo == 0) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glBegin(GL_TRIANGLES);
-        //glVertex3fv((GLfloat *) &malla->car[0]);
-        for (int i = 0; i < malla->n_c; i++) {
-            glVertex3fv((GLfloat *) &(malla->car->ind_c[i]));
-        }
-        glEnd();
     } else if (modo == 1) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glBegin(GL_TRIANGLES);
-        for (int i = 0; i < malla->n_c; i++) {
-            //glVertex3fv((GLfloat*) &Vertices[Caras[i][0]]);
-            glVertex3fv((GLfloat *) &malla->ver[malla->car[i].ind_c[0]]);
-            glVertex3fv((GLfloat *) &malla->ver[malla->car[i].ind_c[1]]);
-            glVertex3fv((GLfloat *) &malla->ver[malla->car[i].ind_c[2]]);
-            
-        }
-        glEnd();
     }
-//    GLfloat Vertices[8][3] = {
-//        {-0.5, -0.5, 0.5},
-//        {0.5, -0.5, 0.5},
-//        {0.5, 0.5, 0.5},
-//        {-0.5, 0.5, 0.5},
-//        {-0.5, -0.5, -0.5},
-//        {0.5, -0.5, -0.5},
-//        {0.5, 0.5, -0.5},
-//        {-0.5, 0.5, -0.5}};
-//
-//    GLint Caras[12][3] = {
-//        {0, 1, 3},
-//        {1, 2, 3}, // cara 1
-//        {1, 5, 2},
-//        {5, 6, 2}, // cara 2
-//        {2, 6, 3},
-//        {3, 6, 7}, // cara 3
-//        {7, 4, 0},
-//        {3, 7, 0}, // cara 4
-//        {5, 1, 0},
-//        {0, 4, 5}, // cara 5
-//        {6, 5, 4},
-//        {4, 7, 6} // cara 6
-//    };
-//
-//    glColor3f(0, 0, 1);
-//    glPointSize(4);
-//
-//    glPolygonMode(GL_FRONT, GL_FILL);
-//    glPolygonMode(GL_BACK, GL_LINE);
-//
-//    glBegin(GL_TRIANGLES);
-//    for (int i = 0; i < 12; i++) {
-//        glVertex3fv((GLfloat*) & Vertices[Caras[i][0]]);
-//        glVertex3fv((GLfloat*) & Vertices[Caras[i][1]]);
-//        glVertex3fv((GLfloat*) & Vertices[Caras[i][2]]);
-//    }
-//    glEnd();
 
-
+    glBegin(GL_TRIANGLES);
+    for (int i = 0; i < malla->n_c; i++) {
+        glVertex3fv((GLfloat *) & malla->ver[malla->car[i].ind_c[0]]);
+        glVertex3fv((GLfloat *) & malla->ver[malla->car[i].ind_c[1]]);
+        glVertex3fv((GLfloat *) & malla->ver[malla->car[i].ind_c[2]]);
+    }
+    glEnd();
 }

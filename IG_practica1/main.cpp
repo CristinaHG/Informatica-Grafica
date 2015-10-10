@@ -101,7 +101,7 @@ void draw_objects()
 solido *piramide = (solido*) malloc(sizeof(solido));
 construir_piramide(3, 5, piramide);
 //draw_puntos(piramide->ver, piramide->n_v,3);
-draw_arista_solido(piramide,1,1,0,1,1);
+draw_arista_solido(piramide,1,1,0,0,1);
 }
 
 
