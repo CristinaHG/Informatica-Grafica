@@ -4,14 +4,25 @@
  *
  * Created on 06 October 2015, 16:01
  */
+//**************************************************************************
+// Práctica 1
+//
+// Domingo Martin Perandres 2013-2016
+//
+// GPL
+//**************************************************************************
 
 #include <cstdlib>
 #include "stdlib.h"
 #include "stdio.h"
 #include <GL/glut.h>
 #include <ctype.h>
+#include <string.h>
 #include "user_code.h"
 using namespace std;
+
+char *figura =(char*) malloc(10);
+char *modo =(char*) malloc(10);
 
 
 // tamaño de los ejes
@@ -98,14 +109,28 @@ glEnd();
 
 void draw_objects()
 {
-solido *piramide = (solido*) malloc(sizeof(solido));
-solido *cubo = (solido*) malloc(sizeof(solido));
-//construir_piramide(3, 5, piramide);
-construir_cubo(3,cubo);
-//draw_puntos(cubo->ver, cubo->n_v,3);
-//draw_arista_solido(cubo,1,1,0,0,1);
-draw_solido_ajedrez(cubo, 1,1,0,0,0,1);
-
+    //int i=5;
+    solido *fig = (solido*) malloc(sizeof(solido));
+//solido *piramide = (solido*) malloc(sizeof(solido));
+    
+    if(strcmp(figura,"piramide")==0){    
+        construir_piramide(3, 5,fig);
+    }else if(strcmp(figura,"cubo")==0){
+        construir_cubo(3,fig);
+    }
+    if(strcmp(modo,"puntos")==0){
+        draw_puntos(fig->ver, fig->n_v,3);      
+    }else if(strcmp(modo,"ajedrez")==0){
+        draw_solido_ajedrez(fig, 1,1,0,0,0,1);
+    }else if(strcmp(modo,"alambre")==0){
+         draw_arista_solido(fig,1,1,0,0,1);   
+    }else if(strcmp(modo,"solido")==0){
+        draw_arista_solido(fig,1,1,0,1,1);
+    }else{
+        printf("seleccione un modo de dibujo válido, por favor");
+        exit(0);
+    }
+        
 }
 
 
@@ -221,7 +246,16 @@ glViewport(0,0,UI_window_width,UI_window_height);
 
 int main(int argc, char **argv)
 {
-
+    printf(" ¿desea pintar un cubo o una piramide?\n");
+    scanf("%s",figura);
+    printf(" ¿desea pintar la figura en modo puntos, alambre,solido o ajedrez?\n");
+    scanf("%s",modo);
+    //if(argv[1]=="piramide"){
+    //    strcpy ( figura, "piramide" );
+    //}else if (argv[1]=="cubo"){
+     //   strcpy ( figura, "cubo" );
+    //}
+    
 // se llama a la inicialización de glut
 glutInit(&argc, argv);
 
