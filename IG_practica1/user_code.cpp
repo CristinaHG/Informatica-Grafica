@@ -45,22 +45,22 @@ void construir_piramide(float tam, float al, solido *piramide) {
     piramide->car[5].ind_c[2] = 0;
 }
 
-/*
+
 void construir_cubo(float tam, solido *cubo){
     cubo->n_v=8;
     cubo->n_c=12;
-    cubo->ver(vertices *)malloc(8*sizeof(vertices));
-    cubo->car(caras *)malloc(12*sizeof(caras));
+    cubo->ver=(vertices *) malloc(8*sizeof(vertices));
+    cubo->car=(caras *) malloc(12*sizeof(caras));
 
     //puntos
-    cubo[0]->ver->coord[0]=-tam;cubo[0]->ver->coord[1]=0;cubo[0]->ver->coord[2]=tam;
-    cubo[1]->ver->coord[0]=tam;cubo[1]->ver->coord[1]=0;cubo[1]->ver->coord[2]=tam;
-    cubo[2]->ver->coord[0]=tam;cubo[2]->ver->coord[1]=tam;cubo[2]->ver->coord[2]=tam;
-    cubo[3]->ver->coord[0]=-tam;cubo[3]->ver->coord[1]=tam;cubo[3]->ver->coord[2]=tam;
-    cubo[4]->ver->coord[0]=-tam;cubo[4]->ver->coord[1]=0;cubo[4]->ver->coord[2]=-tam;
-    cubo[5]->ver->coord[0]=tam;cubo[5]->ver->coord[1]=0;cubo[5]->ver->coord[2]=-tam;
-    cubo[6]->ver->coord[0]=tam;cubo[6]->ver->coord[1]=tam;cubo[6]->ver->coord[2]=-tam;
-    cubo[7]->ver->coord[0]=-tam;cubo[7]->ver->coord[1]=tam;cubo[7]->ver->coord[2]=-tam;
+    cubo->ver[0].coord[0]=-tam;cubo->ver[0].coord[1]=0;cubo->ver[0].coord[2]=tam;
+    cubo->ver[1].coord[0]=tam;cubo->ver[1].coord[1]=0;cubo->ver[1].coord[2]=tam;
+    cubo->ver[2].coord[0]=tam;cubo->ver[2].coord[1]=tam;cubo->ver[2].coord[2]=tam;
+    cubo->ver[3].coord[0]=-tam;cubo->ver[3].coord[1]=tam;cubo->ver[3].coord[2]=tam;
+    cubo->ver[4].coord[0]=-tam;cubo->ver[4].coord[1]=0;cubo->ver[4].coord[2]=-tam;
+    cubo->ver[5].coord[0]=tam;cubo->ver[5].coord[1]=0;cubo->ver[5].coord[2]=-tam;
+    cubo->ver[6].coord[0]=tam;cubo->ver[6].coord[1]=tam;cubo->ver[6].coord[2]=-tam;
+    cubo->ver[7].coord[0]=-tam;cubo->ver[7].coord[1]=tam;cubo->ver[7].coord[2]=-tam;
     
     //caras
     cubo->car[0].ind_c[0]=3;cubo->car[0].ind_c[1]=0;cubo->car[0].ind_c[2]=1;
@@ -76,7 +76,7 @@ void construir_cubo(float tam, solido *cubo){
     cubo->car[10].ind_c[0]=4;cubo->car[10].ind_c[1]=0;cubo->car[10].ind_c[2]=1;
     cubo->car[11].ind_c[0]=5;cubo->car[11].ind_c[1]=4;cubo->car[11].ind_c[2]=1;   
 }
- */
+ 
 void draw_puntos(vertices* ver, int n_v, int grosor) {
     glColor3f(1, 0, 0);
     glPointSize(grosor);
@@ -91,7 +91,7 @@ void draw_puntos(vertices* ver, int n_v, int grosor) {
 void draw_arista_solido(solido *malla, float r, float g, float b, int modo, int grosor) {
     glColor3f(r, g, b);
     glPointSize(grosor);
-    
+
     if (modo == 0) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     } else if (modo == 1) {
@@ -105,4 +105,20 @@ void draw_arista_solido(solido *malla, float r, float g, float b, int modo, int 
         glVertex3fv((GLfloat *) & malla->ver[malla->car[i].ind_c[2]]);
     }
     glEnd();
+}
+
+void draw_solido_ajedrez(solido *malla, float r1, float g1, float b1, float r2, float g2, float b2) {
+    glBegin(GL_TRIANGLES);
+    for (int i = 0; i < malla->n_c; i++) {
+        if (i % 2 == 0) {
+            glColor3f(r1, g1, b1);
+        } else {
+            glColor3f(r2, g2, b2);
+        }
+        glVertex3fv((GLfloat *) & malla->ver[malla->car[i].ind_c[0]]);
+        glVertex3fv((GLfloat *) & malla->ver[malla->car[i].ind_c[1]]);
+        glVertex3fv((GLfloat *) & malla->ver[malla->car[i].ind_c[2]]);
+    }
+    glEnd();
+
 }

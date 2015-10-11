@@ -99,9 +99,13 @@ glEnd();
 void draw_objects()
 {
 solido *piramide = (solido*) malloc(sizeof(solido));
-construir_piramide(3, 5, piramide);
-//draw_puntos(piramide->ver, piramide->n_v,3);
-draw_arista_solido(piramide,1,1,0,0,1);
+solido *cubo = (solido*) malloc(sizeof(solido));
+//construir_piramide(3, 5, piramide);
+construir_cubo(3,cubo);
+//draw_puntos(cubo->ver, cubo->n_v,3);
+//draw_arista_solido(cubo,1,1,0,0,1);
+draw_solido_ajedrez(cubo, 1,1,0,0,0,1);
+
 }
 
 
