@@ -90,7 +90,7 @@ void draw_puntos(vertices* ver, int n_v, int grosor) {
 
 void draw_arista_solido(solido *malla, float r, float g, float b, int modo, int grosor) {
     glColor3f(r, g, b);
-    glPointSize(grosor);
+    glLineWidth(grosor);
 
     if (modo == 0) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
