@@ -34,7 +34,7 @@ caras    *car;
 //**************************************************************************
 
 void construir_cubo(float tam, solido *cubo);
-void construir_piramide(float tam, float al, solido *piramide);
+void construir_piramide(float tam, float al, solido *piramide,int desplazamiento);
 
 //**************************************************************************
 // funciones de visualización

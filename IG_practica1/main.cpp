@@ -111,10 +111,10 @@ void draw_objects()
 {
     //int i=5;
     solido *fig = (solido*) malloc(sizeof(solido));
-//solido *piramide = (solido*) malloc(sizeof(solido));
-    
+    solido *piramide1 = (solido*) malloc(sizeof(solido));
+    solido *piramide2 = (solido*) malloc(sizeof(solido));
     if(strcmp(figura,"piramide")==0){    
-        construir_piramide(3, 5,fig);
+        construir_piramide(3, 5,fig,0);
     }else if(strcmp(figura,"cubo")==0){
         construir_cubo(3,fig);
     }
@@ -130,7 +130,18 @@ void draw_objects()
         printf("seleccione un modo de dibujo válido, por favor");
         exit(0);
     }
-        
+     construir_piramide(3, 5,piramide1,0);
+     glTranslatef(0.0,3,0.0);
+     draw_arista_solido(piramide1,1,1,0,1,1);
+     
+     //construir_piramide(3, -5,piramide2,0);
+     //draw_arista_solido(piramide2,1,1,0,1,1);
+    
+     //glTranslatef(0.0,-3,0.0);
+     glRotatef(180,0,0,1);
+    glTranslatef(0.0,3,0.0);
+    draw_arista_solido(piramide1,1,1,0,1,1);
+    
 }
 
 
