@@ -138,7 +138,7 @@ void draw_objects()
      //draw_arista_solido(piramide2,1,1,0,1,1);
     
      //glTranslatef(0.0,-3,0.0);
-     glRotatef(180,0,0,1);
+    glRotatef(180,0,0,1);
     glTranslatef(0.0,3,0.0);
     draw_arista_solido(piramide1,1,1,0,1,1);
     
