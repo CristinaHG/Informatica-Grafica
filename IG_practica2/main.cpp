@@ -119,10 +119,6 @@ void draw_objects()
     k.open(ply);
     k.read(v_ply,c_ply);
     
-//    read_ply(Coordinates,Positions);
-//    create_ply(Coordinates,Positions);
- //   draw(Object_ply,Mode);
-
     solido *solidoply = (solido*) malloc(sizeof(solido));
     solidoply->n_c=c_ply.size()/3;
     solidoply->n_v=v_ply.size()/3;
@@ -144,13 +140,12 @@ void draw_objects()
             solidoply->car[i].ind_c[j]=c_ply.at(3*i+j);
         }
     }
+    //generar por rev
+    //generaPorRevolucion(solidoply, 4);
     
-    generaPorRevolucion(solidoply, 4);
     
+    //draw_puntos(solidoply->ver, solidoply->n_v,3);
     
-    draw_puntos(solidoply->ver, solidoply->n_v,3);
-    
-    //int i=5;
 //    solido *fig = (solido*) malloc(sizeof(solido));
 //    solido *piramide1 = (solido*) malloc(sizeof(solido));
 //    solido *piramide2 = (solido*) malloc(sizeof(solido));
@@ -159,18 +154,23 @@ void draw_objects()
 //    }else if(strcmp(figura,"cubo")==0){
 //        construir_cubo(3,fig);
 //    }
-//    if(strcmp(modo,"puntos")==0){
-//        draw_puntos(fig->ver, fig->n_v,3);      
-//    }else if(strcmp(modo,"ajedrez")==0){
-//        draw_solido_ajedrez(fig, 1,1,0,0,0,1);
-//    }else if(strcmp(modo,"alambre")==0){
+    
+    if(strcmp(modo,"puntos")==0){
+        //draw_puntos(fig->ver, fig->n_v,3);
+        draw_puntos(solidoply->ver, solidoply->n_v,3);
+    }else if(strcmp(modo,"ajedrez")==0){
+        draw_solido_ajedrez(solidoply, 1,1,0,0,0,1);
+        //draw_solido_ajedrez(fig, 1,1,0,0,0,1);
+    }else if(strcmp(modo,"alambre")==0){
+        draw_arista_solido(solidoply,1,1,0,0,1); 
 //         draw_arista_solido(fig,1,1,0,0,1);   
-//    }else if(strcmp(modo,"solido")==0){
+    }else if(strcmp(modo,"solido")==0){
+        draw_arista_solido(solidoply,1,1,0,1,1);
 //        draw_arista_solido(fig,1,1,0,1,1);
-//    }else{
-//        printf("seleccione un modo de dibujo válido, por favor");
-//        exit(0);
-//    }
+    }else{
+        printf("seleccione un modo de dibujo válido, por favor");
+        exit(0);
+    }
 //     construir_piramide(3, 5,piramide1,0);
 //     glTranslatef(0.0,3,0.0);
 //     draw_arista_solido(piramide1,1,1,0,1,1);
@@ -300,17 +300,13 @@ int main(int argc, char **argv)
 {
     //printf(" ¿desea pintar un cubo o una piramide?\n");
     //scanf("%s",figura);
-    //printf(" ¿desea pintar la figura en modo puntos, alambre,solido o ajedrez?\n");
-    //scanf("%s",modo);
-    printf(" seleccione un archivo PLY\n");
-//    scanf("%s",ply);
-    strcpy(ply,"perfil.ply");
-    //if(argv[1]=="piramide"){
-    //    strcpy ( figura, "piramide" );
-    //}else if (argv[1]=="cubo"){
-     //   strcpy ( figura, "cubo" );
-    //}
     
+    printf(" seleccione un archivo PLY\n");
+       scanf("%s",ply);
+    printf(" ¿desea pintar la figura en modo puntos, alambre,solido o ajedrez?\n");
+       scanf("%s",modo);
+       
+
 // se llama a la inicialización de glut
 glutInit(&argc, argv);
 
