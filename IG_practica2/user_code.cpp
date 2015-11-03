@@ -173,8 +173,9 @@ void generaPorRevolucion(solido *malla, int rotaciones) {
     GLfloat angulo = (2.0 / rotaciones) * M_PI;
     int num_c=0;
     int num_ver=(generados-1);
+    int j=0;
    // malla->car = (caras *) malloc (1000* sizeof(caras));
-    malla->car= (caras *)malloc(100*sizeof(caras));
+    malla->car= (caras *)malloc(1000*sizeof(caras));
     for (int i = 0; i < verticesSinrotar * rotaciones - 1; i++) {
         //        for(int j=0; j<verticesSinrotar;j++){
         GLfloat x = malla->ver[i].coord[0] * cos(angulo) + malla->ver[i].coord[2] * sin(angulo);
@@ -188,24 +189,27 @@ void generaPorRevolucion(solido *malla, int rotaciones) {
         //        angulo+=angulo;
         
         num_ver+=1;
-       
+ 
        if((num_ver % verticesSinrotar)==0){
-            malla->car[i].ind_c[0]=i;
-            malla->car[i].ind_c[1]=i+1;
-            malla->car[i].ind_c[2]=num_ver;
+            malla->car[j].ind_c[0]=i;
+            malla->car[j].ind_c[1]=i+1;
+            malla->car[j].ind_c[2]=num_ver;
             num_c+=1;
         }else{
-            malla->car[i].ind_c[0]=num_ver;
-            malla->car[i].ind_c[1]=num_ver -1;
-            malla->car[i].ind_c[2]=i;
+            malla->car[j].ind_c[0]=num_ver -1;
+            malla->car[j].ind_c[1]=i;
+            malla->car[j].ind_c[2]=num_ver;
             if((num_ver % verticesSinrotar)!=1){
-                malla->car[i].ind_c[0]=num_ver -1;
-                malla->car[i].ind_c[1]=i-1;
-                malla->car[i].ind_c[2]=i;   
+                j+=1;
+                malla->car[j].ind_c[0]=i-1;
+                malla->car[j].ind_c[1]=i;
+                malla->car[j].ind_c[2]=num_ver -1;
+                        
             }
             num_c+=1;
-        }             
-    }
+        }
+        j+=1;
+        }
     
 //        
 //        
@@ -217,6 +221,7 @@ void generaPorRevolucion(solido *malla, int rotaciones) {
   malla->n_c=num_c;
         
 }
+
 
 
 
