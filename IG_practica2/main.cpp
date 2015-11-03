@@ -133,15 +133,15 @@ void draw_objects()
     }
     
     //copiando caras
-    solidoply->car =  (caras*) malloc(solidoply->n_c*sizeof(caras));
-    
-    for(int i=0;i<solidoply->n_c;i++){
-        for(int j=0; j<3;j++){
-            solidoply->car[i].ind_c[j]=c_ply.at(3*i+j);
-        }
-    }
+//    solidoply->car =  (caras*) malloc(solidoply->n_c*sizeof(caras));
+//    
+//    for(int i=0;i<solidoply->n_c;i++){
+//        for(int j=0; j<3;j++){
+//            solidoply->car[i].ind_c[j]=c_ply.at(3*i+j);
+//        }
+//    }
     //generar por rev
-    //generaPorRevolucion(solidoply, 4);
+    generaPorRevolucion(solidoply, 6);
     
     
     //draw_puntos(solidoply->ver, solidoply->n_v,3);
@@ -302,9 +302,11 @@ int main(int argc, char **argv)
     //scanf("%s",figura);
     
     printf(" seleccione un archivo PLY\n");
-       scanf("%s",ply);
+       //scanf("%s",ply);
+    strcpy(ply, "cilindro.ply");
     printf(" ¿desea pintar la figura en modo puntos, alambre,solido o ajedrez?\n");
-       scanf("%s",modo);
+       //scanf("%s",modo);
+    strcpy(modo, "ajedrez");
        
 
 // se llama a la inicialización de glut

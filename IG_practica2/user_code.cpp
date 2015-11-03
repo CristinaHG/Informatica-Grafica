@@ -169,10 +169,12 @@ void generaPorRevolucion(solido *malla, int rotaciones) {
     int verticesSinrotar = malla->n_v;
     int generados = verticesSinrotar;
     malla->n_v = verticesSinrotar*rotaciones;
-    //malla->n_v=(malla->n_v*rotaciones);
     malla->ver = (vertices *) realloc(malla->ver, (malla->n_v + verticesSinrotar) * sizeof (struct vertices));
     GLfloat angulo = (2.0 / rotaciones) * M_PI;
-    
+    int num_c=0;
+    int num_ver=(generados-1);
+   // malla->car = (caras *) malloc (1000* sizeof(caras));
+    malla->car= (caras *)malloc(100*sizeof(caras));
     for (int i = 0; i < verticesSinrotar * rotaciones - 1; i++) {
         //        for(int j=0; j<verticesSinrotar;j++){
         GLfloat x = malla->ver[i].coord[0] * cos(angulo) + malla->ver[i].coord[2] * sin(angulo);
@@ -182,16 +184,40 @@ void generaPorRevolucion(solido *malla, int rotaciones) {
 
         malla->ver[i + generados].coord[0] = x;
         malla->ver[i + generados].coord[1] = y;
-        malla->ver[i + generados].coord[2] = z;
-        //            generados++;
-        cout << malla->ver[i+generados].coord[0] << ",";
-        cout << malla->ver[i+generados].coord[1] << ",";
-        cout << malla->ver[i+generados].coord[2] << endl;
-        //        }  
+        malla->ver[i + generados].coord[2] = z;       
         //        angulo+=angulo;
+        
+        num_ver+=1;
+       
+       if((num_ver % verticesSinrotar)==0){
+            malla->car[i].ind_c[0]=i;
+            malla->car[i].ind_c[1]=i+1;
+            malla->car[i].ind_c[2]=num_ver;
+            num_c+=1;
+        }else{
+            malla->car[i].ind_c[0]=num_ver;
+            malla->car[i].ind_c[1]=num_ver -1;
+            malla->car[i].ind_c[2]=i;
+            if((num_ver % verticesSinrotar)!=1){
+                malla->car[i].ind_c[0]=num_ver -1;
+                malla->car[i].ind_c[1]=i-1;
+                malla->car[i].ind_c[2]=i;   
+            }
+            num_c+=1;
+        }             
     }
+    
+//        
+//        
+//        malla->car[0].ind_c[0]=0;malla->car[0].ind_c[1]=1;malla->car[0].ind_c[2]=3;
+//        malla->car[1].ind_c[0]=3;malla->car[1].ind_c[1]=1;malla->car[1].ind_c[2]=4;
+//        malla->car[2].ind_c[0]=4;malla->car[2].ind_c[1]=1;malla->car[2].ind_c[2]=2;
+//        malla->car[3].ind_c[0]=2;malla->car[3].ind_c[1]=5;malla->car[3].ind_c[2]=4;   
+// 
+  malla->n_c=num_c;
+        
 }
-//solidoply->ver =  (vertices*) malloc(solidoply->n_v*sizeof(vertices));
+
 
 
 //copia vertices
