@@ -175,8 +175,8 @@ void generaPorRevolucion(solido *malla, int rotaciones) {
     int num_ver=(generados-1);
     int j=0;
    // malla->car = (caras *) malloc (1000* sizeof(caras));
-    malla->car= (caras *)malloc(1000*sizeof(caras));
-    for (int i = 0; i < verticesSinrotar * rotaciones - 1; i++) {
+    malla->car= (caras *)malloc(1000000*sizeof(caras));
+    for (int i = 0; i < verticesSinrotar * rotaciones; i++) {
         //        for(int j=0; j<verticesSinrotar;j++){
         GLfloat x = malla->ver[i].coord[0] * cos(angulo) + malla->ver[i].coord[2] * sin(angulo);
         GLfloat y = malla->ver[i].coord[1];
@@ -190,6 +190,7 @@ void generaPorRevolucion(solido *malla, int rotaciones) {
         
         num_ver+=1;
  
+        if (i < verticesSinrotar * rotaciones - verticesSinrotar){
        if((num_ver % verticesSinrotar)==0){
             malla->car[j].ind_c[0]=i;
             malla->car[j].ind_c[1]=i+1;
@@ -204,12 +205,36 @@ void generaPorRevolucion(solido *malla, int rotaciones) {
                 malla->car[j].ind_c[0]=i-1;
                 malla->car[j].ind_c[1]=i;
                 malla->car[j].ind_c[2]=num_ver -1;
+                num_c+=1;
                         
             }
             num_c+=1;
         }
         j+=1;
+                      
         }
+    }
+    
+    int p_inicial=0;
+    for(int i=verticesSinrotar * rotaciones -verticesSinrotar; i < malla->n_v-1;i++){
+      malla->car[num_c].ind_c[0]=i;malla->car[num_c].ind_c[1]=i+1;malla->car[num_c ].ind_c[2]=p_inicial;
+      num_c+=1;
+      p_inicial+=1; 
+      malla->car[num_c].ind_c[0]=i+1;malla->car[num_c].ind_c[1]=p_inicial;malla->car[num_c ].ind_c[2]=p_inicial-1;
+      num_c+=1;
+    }
+    
+//    
+//    malla->car[num_c-1].ind_c[0]=8;malla->car[num_c-1].ind_c[1]=2;malla->car[num_c -1].ind_c[2]=7;
+//    num_c+=1;
+//    malla->car[num_c-1].ind_c[0]=7;malla->car[num_c-1].ind_c[1]=2;malla->car[num_c -1].ind_c[2]=1;
+//    num_c+=1;
+//    malla->car[num_c-1].ind_c[0]=7;malla->car[num_c-1].ind_c[1]=1;malla->car[num_c -1].ind_c[2]=6;
+//    num_c+=1;    
+//    malla->car[num_c-1].ind_c[0]=6;malla->car[num_c-1].ind_c[1]=1;malla->car[num_c -1].ind_c[2]=0;
+//    num_c+=1;     
+//        
+
     
 //        
 //        

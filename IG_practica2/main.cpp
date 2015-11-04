@@ -141,7 +141,7 @@ void draw_objects()
 //        }
 //    }
     //generar por rev
-    generaPorRevolucion(solidoply, 3);
+    generaPorRevolucion(solidoply, 5);
     
     
     //draw_puntos(solidoply->ver, solidoply->n_v,3);
@@ -302,11 +302,11 @@ int main(int argc, char **argv)
     //scanf("%s",figura);
     
     printf(" seleccione un archivo PLY\n");
-       //scanf("%s",ply);
-    strcpy(ply, "cilindro.ply");
+       scanf("%s",ply);
+    //strcpy(ply, "cilindro.ply");
     printf(" ¿desea pintar la figura en modo puntos, alambre,solido o ajedrez?\n");
-       //scanf("%s",modo);
-    strcpy(modo, "ajedrez");
+       scanf("%s",modo);
+    //strcpy(modo, "ajedrez");
        
 
 // se llama a la inicialización de glut
