@@ -141,7 +141,7 @@ void draw_objects()
 //        }
 //    }
     //generar por rev
-    generaPorRevolucion(solidoply, 20);
+    generaPorRevolucion(solidoply, 30);
     
     
     //draw_puntos(solidoply->ver, solidoply->n_v,3);

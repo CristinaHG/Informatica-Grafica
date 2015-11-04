@@ -238,6 +238,14 @@ void generaPorRevolucion(solido *malla, int rotaciones) {
             num_c+=1;       
         }      
     }
+    //cerrar tapas de abajo
+        for (int i=0; i < rotaciones-2;i++){
+            malla->car[num_c].ind_c[0]=verticesSinrotar*rotaciones-verticesSinrotar;
+            malla->car[num_c].ind_c[1]=verticesSinrotar+(i*verticesSinrotar);
+            malla->car[num_c ].ind_c[2]=i*verticesSinrotar;
+            num_c+=1; 
+        }
+    
     
 //    malla->car[num_c-1].ind_c[0]=8;malla->car[num_c-1].ind_c[1]=2;malla->car[num_c -1].ind_c[2]=7;
 //    num_c+=1;
