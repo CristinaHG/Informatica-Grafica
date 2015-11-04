@@ -165,7 +165,7 @@ void draw_solido_ajedrez(solido *malla, float r1, float g1, float b1, float r2, 
 
 }
 
-void generaPorRevolucion(solido *malla, int rotaciones) {
+void generaPorRevolucion(solido *malla, int rotaciones, int tapas) {
     int verticesSinrotar = malla->n_v;
     int generados = verticesSinrotar;
     malla->n_v = verticesSinrotar*rotaciones;
@@ -214,6 +214,7 @@ void generaPorRevolucion(solido *malla, int rotaciones) {
                       
         }
     }
+
     //unir perfil final con inicial
     int p_inicial=0;
     for(int i=verticesSinrotar * rotaciones -verticesSinrotar; i < malla->n_v-1;i++){
@@ -224,20 +225,21 @@ void generaPorRevolucion(solido *malla, int rotaciones) {
       num_c+=1;
     }
     
+    if (tapas==1){
     //cerrar tapas arriba
-    for (int i=0; i < rotaciones-2;i++){
-        if(i!=rotaciones-3){
-            malla->car[num_c].ind_c[0]=i*verticesSinrotar+verticesSinrotar-1;
-            malla->car[num_c].ind_c[1]=2*verticesSinrotar+(i*verticesSinrotar)-1 ;
-            malla->car[num_c ].ind_c[2]=verticesSinrotar*rotaciones -1;
-            num_c+=1; 
-        }else{
-            malla->car[num_c].ind_c[0]=(i*verticesSinrotar+verticesSinrotar-1)%verticesSinrotar;
-            malla->car[num_c].ind_c[1]=2*verticesSinrotar+(i*verticesSinrotar)-1 ;
-            malla->car[num_c].ind_c[2]=verticesSinrotar*rotaciones -1;
-            num_c+=1;       
-        }      
-    }
+     for (int i=0; i < rotaciones-2;i++){
+         if(i!=rotaciones-3){
+             malla->car[num_c].ind_c[0]=i*verticesSinrotar+verticesSinrotar-1;
+             malla->car[num_c].ind_c[1]=2*verticesSinrotar+(i*verticesSinrotar)-1 ;
+             malla->car[num_c ].ind_c[2]=verticesSinrotar*rotaciones -1;
+             num_c+=1; 
+         }else{
+             malla->car[num_c].ind_c[0]=(i*verticesSinrotar+verticesSinrotar-1)%verticesSinrotar;
+             malla->car[num_c].ind_c[1]=2*verticesSinrotar+(i*verticesSinrotar)-1 ;
+             malla->car[num_c].ind_c[2]=verticesSinrotar*rotaciones -1;
+             num_c+=1;       
+         }      
+     }
     //cerrar tapas de abajo
         for (int i=0; i < rotaciones-2;i++){
             malla->car[num_c].ind_c[0]=verticesSinrotar*rotaciones-verticesSinrotar;
@@ -245,7 +247,7 @@ void generaPorRevolucion(solido *malla, int rotaciones) {
             malla->car[num_c ].ind_c[2]=i*verticesSinrotar;
             num_c+=1; 
         }
-    
+    }  
     
 //    malla->car[num_c-1].ind_c[0]=8;malla->car[num_c-1].ind_c[1]=2;malla->car[num_c -1].ind_c[2]=7;
 //    num_c+=1;

@@ -47,7 +47,7 @@ void construir_piramide(float tam, float al, solido *piramide,int desplazamiento
 void draw_puntos(vertices *ver, int n_v, int grosor); 
 void draw_arista_solido(solido *malla, float r, float g, float b, int modo, int grosor);
 void draw_solido_ajedrez(solido *malla, float r1, float g1, float b1, float r2, float g2, float b2);
-void generaPorRevolucion(solido *malla, int rotaciones);
+void generaPorRevolucion(solido *malla, int rotaciones, int tapas);
 //void copiaVertices_ply(std::vector<float> v_ply,solido *ply);
 //void copiaCaras_ply(std::vector<int> c_ply,solido *ply);
 
