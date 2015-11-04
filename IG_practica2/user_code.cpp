@@ -214,7 +214,7 @@ void generaPorRevolucion(solido *malla, int rotaciones) {
                       
         }
     }
-    
+    //unir perfil final con inicial
     int p_inicial=0;
     for(int i=verticesSinrotar * rotaciones -verticesSinrotar; i < malla->n_v-1;i++){
       malla->car[num_c].ind_c[0]=i;malla->car[num_c].ind_c[1]=i+1;malla->car[num_c ].ind_c[2]=p_inicial;
@@ -224,7 +224,21 @@ void generaPorRevolucion(solido *malla, int rotaciones) {
       num_c+=1;
     }
     
-//    
+    //cerrar tapas arriba
+    for (int i=0; i < rotaciones-2;i++){
+        if(i!=rotaciones-3){
+            malla->car[num_c].ind_c[0]=i*verticesSinrotar+verticesSinrotar-1;
+            malla->car[num_c].ind_c[1]=2*verticesSinrotar+(i*verticesSinrotar)-1 ;
+            malla->car[num_c ].ind_c[2]=verticesSinrotar*rotaciones -1;
+            num_c+=1; 
+        }else{
+            malla->car[num_c].ind_c[0]=(i*verticesSinrotar+verticesSinrotar-1)%verticesSinrotar;
+            malla->car[num_c].ind_c[1]=2*verticesSinrotar+(i*verticesSinrotar)-1 ;
+            malla->car[num_c].ind_c[2]=verticesSinrotar*rotaciones -1;
+            num_c+=1;       
+        }      
+    }
+    
 //    malla->car[num_c-1].ind_c[0]=8;malla->car[num_c-1].ind_c[1]=2;malla->car[num_c -1].ind_c[2]=7;
 //    num_c+=1;
 //    malla->car[num_c-1].ind_c[0]=7;malla->car[num_c-1].ind_c[1]=2;malla->car[num_c -1].ind_c[2]=1;
@@ -234,32 +248,6 @@ void generaPorRevolucion(solido *malla, int rotaciones) {
 //    malla->car[num_c-1].ind_c[0]=6;malla->car[num_c-1].ind_c[1]=1;malla->car[num_c -1].ind_c[2]=0;
 //    num_c+=1;     
 //        
-
-    
-//        
-//        
-//        malla->car[0].ind_c[0]=0;malla->car[0].ind_c[1]=1;malla->car[0].ind_c[2]=3;
-//        malla->car[1].ind_c[0]=3;malla->car[1].ind_c[1]=1;malla->car[1].ind_c[2]=4;
-//        malla->car[2].ind_c[0]=4;malla->car[2].ind_c[1]=1;malla->car[2].ind_c[2]=2;
-//        malla->car[3].ind_c[0]=2;malla->car[3].ind_c[1]=5;malla->car[3].ind_c[2]=4;   
-// 
   malla->n_c=num_c;
         
 }
-
-
-
-
-//copia vertices
-//void copiaVertices_ply(vector<float> v_ply, solido *ply){
-//    for(int i=0;i<v_ply.size();i++){
-//        ply->ver[i]=v_ply.at(i);
-//    }
-//}
-
-//copia caras
-//void copiaCaras_ply(vector<int> c_ply, solido *ply){
-//    for(int i=0;i<c_ply.size();i++){
-//        ply->car[i]=c_ply.at(i);
-//    }
-//}
