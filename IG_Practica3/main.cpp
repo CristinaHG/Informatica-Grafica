@@ -140,7 +140,7 @@ glutSolidSphere(0.34,10,10);
 }
 void letf_eye(){
     glPushMatrix();
-glutSolidSphere(0.21,10,10);
+glutSolidSphere(0.24,10,10);
     glColor3f(1,1,1);
      glPopMatrix();
 }
@@ -148,7 +148,7 @@ void nose(){
     glPushMatrix();
 //    glColor3f(1.0,0.0,0.0);
     glScalef(0.25,0.25,1);
-    float nariz[3][3]={{-1,0,3},{1,0,3},{0,1,3}};
+    float nariz[3][3]={{-1,0,1},{1,0,1},{0,1,1}};
     glBegin(GL_TRIANGLES);   
     Poligono_Solido(nariz,3);
     glEnd();
@@ -242,10 +242,10 @@ void DrawRobot(float x, float y, float z, float lua, float lla, float rua,
     glTranslatef(1,0,2);
     glColor3f(0,0,0);
     right_eye();
-    glTranslatef(-1.7,-0.1,2);
+    glTranslatef(-1.8,0,0.15);
     glColor3f(0,0,0);
     letf_eye();
-    glTranslatef(0.68,-1,2);
+    glTranslatef(0.68,-1,-0.7);
     glColor3f(0,0,0);
     nose();
     glColor3f(0.87,0.68,0.32);
@@ -268,7 +268,7 @@ void DrawRobot(float x, float y, float z, float lua, float lla, float rua,
     right_lower_arm();
   glPopMatrix();
   glPushMatrix();
-    glTranslatef(0, -TORSO_HEIGHT-PELVIS, 0);
+    glTranslatef(0, -TORSO_HEIGHT, 0);
     glRotatef(pelvis, 0, 0, 1);
     build_pelvis();
 
@@ -470,23 +470,23 @@ void draw_scene(void)
 {
 
 clear_window();
-//change_observer();
-//draw_axis();
+change_observer();
+draw_axis();
 
  /* (Re)position the camera */
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  gluLookAt(eye[0], eye[1], eye[2], at[0], at[1], at[2], 0, 1, 0);
+//  glMatrixMode(GL_MODELVIEW);
+//  glLoadIdentity();
+//  gluLookAt(eye[0], eye[1], eye[2], at[0], at[1], at[2], 0, 1, 0);
 
   /* Rotate the scene in the x and y directions */
-  glRotatef(xRotate, 0, 1, 0);
-  glRotatef(yRotate, 1, 0, 0);
+//  glRotatef(xRotate, 0, 1, 0);
+//  glRotatef(yRotate, 1, 0, 0);
 
   draw_objects();
   
   /* Before returning, flush the graphics buffer
    * so all graphics appear in the window */
-  glFlush();
+//  glFlush();
 glutSwapBuffers();
 }
 
@@ -642,41 +642,41 @@ void InitQuadrics() {
 void initialize(void)
 {
 // se inicalizan la ventana y los planos de corte
-//Window_width=5;
-//Window_height=5;
-//Front_plane=10;
-//Back_plane=1000;
+Window_width=5;
+Window_height=5;
+Front_plane=10;
+Back_plane=1000;
 
 // se inicia la posicion del observador, en el eje z
-//Observer_distance=2*Front_plane;
-//Observer_angle_x=0;
-//Observer_angle_y=0;
+Observer_distance=2*Front_plane;
+Observer_angle_x=0;
+Observer_angle_y=0;
 
 // se indica cual sera el color para limpiar la ventana	(r,v,a,al)
 // blanco=(1,1,1,1) rojo=(1,0,0,1), ...
     
 glClearColor(1,1,1,1);
 
- glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+ //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 /* Set up perspective projection */
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluPerspective(60.0f, 1.0f, 10.0f, -10.0f);
+//  glMatrixMode(GL_PROJECTION);
+//  glLoadIdentity();
+//  gluPerspective(60.0f, 1.0f, 10.0f, -10.0f);
 
   /* Initialize the camera position */
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  gluLookAt(eye[0], eye[1], eye[2], at[0], at[1], at[2], 0, 1, 0);
+//  glMatrixMode(GL_MODELVIEW);
+//  glLoadIdentity();
+//  gluLookAt(eye[0], eye[1], eye[2], at[0], at[1], at[2], 0, 1, 0);
 
 // se habilita el z-bufer
 glEnable(GL_DEPTH_TEST);
 //
-//change_projection();
+change_projection();
 
 
  /* allocate quadrics with filled drawing style */
   InitQuadrics();
-//glViewport(0,0,UI_window_width,UI_window_height);
+glViewport(0,0,UI_window_width,UI_window_height);
 }
 
 
@@ -717,7 +717,7 @@ glutCreateWindow("Practica 3");
 // asignación de la funcion llamada "dibujar" al evento de dibujo
 glutDisplayFunc(draw_scene);
 // asignación de la funcion llamada "cambiar_tamanio_ventana" al evento correspondiente
-//glutReshapeFunc(change_window_size);
+glutReshapeFunc(change_window_size);
 // asignación de la funcion llamada "tecla_normal" al evento correspondiente
 glutKeyboardFunc(normal_keys);
 // asignación de la funcion llamada "tecla_Especial" al evento correspondiente
