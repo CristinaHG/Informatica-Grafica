@@ -5,14 +5,6 @@
  * Created on 30 November 2015, 20:51
  */
 
-//**************************************************************************
-// Práctica 1
-//
-// Domingo Martin Perandres 2013-2016
-//
-// GPL
-//**************************************************************************
-
 #include "stdlib.h"
 #include "stdio.h"
 #include <GL/glut.h>
@@ -39,64 +31,36 @@ GLfloat Window_width,Window_height,Front_plane,Back_plane;
 // variables que determninan la posicion y tamaño de la ventana X
 int UI_window_pos_x=50,UI_window_pos_y=50,UI_window_width=500,UI_window_height=500;
 
-///* Variables to control the spped of rotation/translation/zoom */
-//#define DEGREES_PER_PIXEL	0.6f
-//#define UNITS_PER_PIXEL		0.1f
-//#define ZOOM_FACTOR		0.04f
 
-/* Enumeration of body parts */
+//piezas móviles
 enum {
-  TORSO,
-  LUA,
-  LLA,
-  RUA,
-  RLA,
-  LUL,
-  PEL,
-  //LLL,
-  RUL,
- // RLL,
+  BRAZOIZQ, 
+  MANOIZQ,
+  BRAZODER,
+  MANODER,
+  PIERNAIZQ,
+  PELVIS,
+  PIERNADER,
   QUIT
 };
 
-/* Variables to control the size of the robot */
-#define HEAD_HEIGHT 3.0
-//#define HEAD_RADIUS 1.0
+//variables de tamaño
+#define CABEZA 3.0
+#define TORSO 3.0
+#define BRAZO 2.0
+#define MANO 1.0
+#define PIERNA 2.0
+#define PELVIS_SIZE 1.0
 
-#define TORSO_HEIGHT 3.0
-//#define TORSO_RADIUS 1.5
 
-#define UPPER_ARM_HEIGHT 2.0
-#define LOWER_ARM_HEIGHT 1.0
-//#define UPPER_ARM_RADIUS  0.5
-//#define LOWER_ARM_RADIUS  0.5 
-#define UPPER_LEG_HEIGHT 2.0
-#define PELVIS 1.0
-//#define LOWER_LEG_HEIGHT 2.0
-//#define UPPER_LEG_RADIUS  0.5
-//#define LOWER_LEG_RADIUS  0.5
+GLUquadricObj *t, *h, *brazoIzq, *manoIzq, *brazoDer, *manoDer,*piernaIzq, *piernaDer, *pelvis;
 
-/* Scene rotation angles to alter interactively */
-float xRotate = 0, yRotate = 0;
-
-/* Camera position and orientation -- used by gluLookAt */
-GLfloat eye[] = { 0, 0, 20 };
-GLfloat at[] = { 0, 0, 0 };
-
-GLUquadricObj *t, *h, /* torso and head */
-*lua, *lla, *rua, *rla, /* arms */
-*lul, *lll, *rul, *rll, *pelvis;
-
-/* initial joint angles */
-static GLfloat theta[QUIT] = { 0, 0, 0, 0, 0,0, 0.0, 0.0 };
-/* torso position */
-static GLfloat center[3] = { 0, 0, 0 };
-/* joint angle to alter interactively */
-//static GLint angle = 0; /* initially, TORSO */
+//angulo inicial
+static GLfloat theta[QUIT] = { 0, 0, 0, 0,0, 0.0, 0.0 };
 
 
 //**************************************************************************
-// Funcion que dibuja los objetos
+// Funcion que dibuja circulos
 //***************************************************************************
 
 void Circle (GLfloat radio, GLfloat cx, GLfloat cy, GLint n, GLenum modo){
@@ -112,6 +76,9 @@ for (i=0;i<n;i++)
 	glVertex3f( cx+radio*cos(2.0*M_PI*i/n), cy+radio*sin(2.0*M_PI*i/n),0.01);
 glEnd();
 }
+//**************************************************************************
+// Funcion que dibuja poligonos
+//***************************************************************************
 
 void Poligono_Solido(float v[][3], int n){
 int i;
@@ -122,168 +89,148 @@ int i;
 	glEnd();
 }
 
+//**************************************************************************
+// Funciones para las partes del cuerpo del robot de cartón
+//***************************************************************************
 
-void head() {
+void cabeza() {
   glPushMatrix();
-
-  glScalef(HEAD_HEIGHT/2, HEAD_HEIGHT/3,HEAD_HEIGHT/2);
-  //gluSphere(h, 1.0, 10, 10);
-  glutSolidCube(HEAD_HEIGHT);
+  glScalef(CABEZA/2, CABEZA/3,CABEZA/2);
+  glutSolidCube(CABEZA);
   glPopMatrix();
 }
-void right_eye(){
+void ojo_derecho(){
     glPushMatrix();
-glutSolidSphere(0.34,10,10);
+    glutSolidSphere(0.34,10,10);
     glColor3f(1,1,1);
-     glPopMatrix();
+    glPopMatrix();
 
 }
-void letf_eye(){
+void ojo_izquierdo(){
     glPushMatrix();
-glutSolidSphere(0.24,10,10);
+    glutSolidSphere(0.24,10,10);
     glColor3f(1,1,1);
-     glPopMatrix();
+    glPopMatrix();
 }
-void nose(){
+void boca(){
+    float boca[3][3]={{-1,0,1},{1,0,1},{0,1,1}};
     glPushMatrix();
-//    glColor3f(1.0,0.0,0.0);
     glScalef(0.25,0.25,1);
-    float nariz[3][3]={{-1,0,1},{1,0,1},{0,1,1}};
     glBegin(GL_TRIANGLES);   
-    Poligono_Solido(nariz,3);
+    Poligono_Solido(boca,3);
     glEnd();
     glPopMatrix();
 }
 void torso() {
   glPushMatrix();
   glTranslatef(0, -1.5, 0);
-  glutSolidCube(TORSO_HEIGHT);
+  glutSolidCube(TORSO);
   glPopMatrix();
 }
 
-void left_upper_arm() {
+void brazo_izquierdo() {
   glPushMatrix();
-//  glRotatef(90, 0, 1, 0);
   glScalef(3,0.5,0.5);
-//  gluCylinder(lua, UPPER_ARM_RADIUS, UPPER_ARM_RADIUS, UPPER_ARM_HEIGHT, 10,
-//              10);
-  glutSolidCube(UPPER_ARM_HEIGHT);
+  glutSolidCube(BRAZO);
   glPopMatrix();
 }
 
-void left_lower_arm() {
+void mano_izquierda() {
   glPushMatrix();
-//  glRotatef(-90, 0, 1, 0);
-//  glScalef(1,1,1);
-//  gluCylinder(lla, LOWER_ARM_RADIUS, LOWER_ARM_RADIUS, LOWER_ARM_HEIGHT, 10,
-//              10);
-  glutSolidCube(LOWER_ARM_HEIGHT);
+  glutSolidCube(MANO);
   glPopMatrix();
 }
 
-void right_upper_arm() {
+void brazo_derecho() {
   glPushMatrix();
-//  glRotatef(-90, 0, 1, 0);
   glScalef(3,0.5,0.5);
-  
-//  gluCylinder(rua, UPPER_ARM_RADIUS, UPPER_ARM_RADIUS, UPPER_ARM_HEIGHT, 10,
-//              10);
-  glutSolidCube(UPPER_ARM_HEIGHT); 
+  glutSolidCube(BRAZO); 
   glPopMatrix();
 }
 
-void right_lower_arm() {
+void mano_derecha() {
   glPushMatrix();
- // glRotatef(-90, 0, 1, 0);
- // glScalef(1,1,1);
-//  gluCylinder(lla, LOWER_ARM_RADIUS, LOWER_ARM_RADIUS, LOWER_ARM_HEIGHT, 10,
-//              10);
-  glutSolidCube(LOWER_ARM_HEIGHT);
+  glutSolidCube(MANO);
   glPopMatrix();
 }
 
-void left_upper_leg() {
+void pierna_izquierda() {
   glPushMatrix();
   glRotatef(90, 1, 0, 0);
   glScalef(0.6,0.5,1.5);
-//  gluCylinder(lul, UPPER_LEG_RADIUS, UPPER_LEG_RADIUS, UPPER_LEG_HEIGHT, 10,
- //             10);
-  glutSolidCube(UPPER_LEG_HEIGHT);
+  glutSolidCube(PIERNA);
   glPopMatrix();
 }
 
-void right_upper_leg() {
+void pierna_derecha() {
   glPushMatrix();
   glRotatef(90, 1, 0, 0);
   glScalef(0.6,0.5,1.5);
-  //gluCylinder(rul, UPPER_LEG_RADIUS, UPPER_LEG_RADIUS, UPPER_LEG_HEIGHT, 20,
-   //           20);
-  glutSolidCube(UPPER_LEG_HEIGHT);
+  glutSolidCube(PIERNA);
   glPopMatrix();
 }
 
-void build_pelvis() {
+void crea_pelvis() {
   glPushMatrix();
   glRotatef(90, 1, 0, 0);
   glScalef(3.3,0.5,1.5);
-  glutSolidCube(PELVIS);
+  glutSolidCube(PELVIS_SIZE);
   glPopMatrix();
 }
 
 
 
-void DrawRobot(float x, float y, float z, float lua, float lla, float rua,
-               float rla, float lul, float rul,float pelvis) {
+void DrawRobot(float x, float y, float z, float brazoIzq, float manoIzq, float brazoDer,
+               float manoDer, float piernaIzq, float piernaDer,float pelvis) {
+    
     glColor3f(0.87,0.68,0.32);
   torso();
   glPushMatrix();
-    glTranslatef(0, HEAD_HEIGHT / 2, 0);
-    head();
+    glTranslatef(0, CABEZA / 2, 0);
+    cabeza();
     glTranslatef(1,0,2);
     glColor3f(0,0,0);
-    right_eye();
+    ojo_derecho();
     glTranslatef(-1.8,0,0.15);
     glColor3f(0,0,0);
-    letf_eye();
+    ojo_izquierdo();
     glTranslatef(0.68,-1,-0.7);
     glColor3f(0,0,0);
-    nose();
+   boca();
     glColor3f(0.87,0.68,0.32);
-    //glColor3f(0.87,0.68,0.32);
   glPopMatrix();
   glPushMatrix();
-    glTranslatef(TORSO_HEIGHT/2, 0, 0);
-    glRotatef(lua, 0, 0, 1);
-    left_upper_arm();
-    glTranslatef(UPPER_ARM_HEIGHT+1.5, 0, 0);
-    glRotatef(lla, 0, 0, 1);
-    left_lower_arm();
+    glTranslatef(TORSO/2, 0, 0);
+    glRotatef(brazoIzq, 0, 0, 1);
+    brazo_izquierdo();
+    glTranslatef(BRAZO+1.5, 0, 0);
+    glRotatef(manoIzq, 0, 0, 1);
+    mano_izquierda();
   glPopMatrix();
   glPushMatrix();
-    glTranslatef(-TORSO_HEIGHT/2, 0, 0);
-    glRotatef(rua, 0, 0, 1);
-    right_upper_arm();
-    glTranslatef(-UPPER_ARM_HEIGHT-1.5, 0, 0);
-    glRotatef(rla, 0, 0, 1);
-    right_lower_arm();
+    glTranslatef(-TORSO/2, 0, 0);
+    glRotatef(brazoDer, 0, 0, 1);
+    brazo_derecho();
+    glTranslatef(-BRAZO-1.5, 0, 0);
+    glRotatef(manoDer, 0, 0, 1);
+    mano_derecha();
   glPopMatrix();
   glPushMatrix();
-    glTranslatef(0, -TORSO_HEIGHT, 0);
+    glTranslatef(0, -TORSO, 0);
     glRotatef(pelvis, 0, 0, 1);
-    build_pelvis();
+    crea_pelvis();
 
      glPushMatrix();
-  glTranslatef(TORSO_HEIGHT/3, -TORSO_HEIGHT+PELVIS*2, 0);
-    glRotatef(lul, 1, 0, 0);
-    left_upper_leg();
+  glTranslatef(TORSO/3, -TORSO+PELVIS_SIZE*2, 0);
+    glRotatef(piernaIzq, 1, 0, 0);
+    pierna_izquierda();
     glPopMatrix();
  
      glPushMatrix();
-    glTranslatef(-TORSO_HEIGHT/3,-TORSO_HEIGHT+PELVIS*2, 0);
-    glRotatef(rul, 1, 0, 0);
-    right_upper_leg();
+    glTranslatef(-TORSO/3,-TORSO+PELVIS_SIZE*2, 0);
+    glRotatef(piernaDer, 1, 0, 0);
+    pierna_derecha();
     glPopMatrix();
-
   glPopMatrix();
 }
 
@@ -307,9 +254,6 @@ void change_projection()
 
 glMatrixMode(GL_PROJECTION);
 glLoadIdentity();
-
-// formato(x_minimo,x_maximo, y_minimo, y_maximo,Front_plane, plano_traser)
-//  Front_plane>0  Back_plane>PlanoDelantero)
 glFrustum(-Window_width,Window_width,-Window_height,Window_height,Front_plane,Back_plane);
 }
 
@@ -354,112 +298,7 @@ glEnd();
 
 void draw_objects()
 {
-   DrawRobot(center[0], center[1], center[2], theta[LUA], theta[LLA], theta[RUA],
-            theta[RLA], theta[LUL], theta[RUL],theta[PEL]);
-    
-//    DrawRobot(center[0], center[1], center[2], theta[LUA], theta[LLA], theta[RUA],
-//            theta[RLA], theta[LUL], theta[LLL], theta[RUL], theta[RLL]);
-
-//
-//glColor3f(0.0,0.0,0.0); // copa
-//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-//glBegin(GL_POLYGON);
-//	glVertex3f(1,7,0);
-//	glVertex3f(1,5,0);
-//	glVertex3f(-1,5,0);
-//	glVertex3f(-1,7,0);
-//glEnd();
-//
-//
-//glBegin(GL_POLYGON); // ala
-//	glVertex3f(1.5,5,0);
-//	glVertex3f(1.5,4,0);
-//	glVertex3f(-1.5,4,0);
-//	glVertex3f(-1.5,5,0);
-//	
-//	
-//glEnd();
-//
-//glColor3f(1.0,0.8,0.6); // cara
-//glBegin(GL_POLYGON);
-//	glVertex3f(1,4,0);
-//	glVertex3f(1,0,0);
-//	glVertex3f(-1,0,0);
-//	glVertex3f(-1,4,0);	
-//glEnd();
-//
-//glColor3f(0.0,0.0,0.0);    // borde de cara
-//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//glLineWidth(2);
-//glBegin(GL_POLYGON);
-//	glVertex3f(1,4,0);
-//	glVertex3f(1,0,0);
-//	glVertex3f(-1,0,0);
-//	glVertex3f(-1,4,0);	
-//glEnd();
-//
-//glColor3f(1.0,0.8,0.6); // oreja izq
-//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-//glBegin(GL_POLYGON);
-//	glVertex3f(-1,3,0);
-//	glVertex3f(-1,2,0);
-//	glVertex3f(-1.5,2,0);
-//	glVertex3f(-1.5,3,0);
-//glEnd();
-//
-//glColor3f(1.0,0.8,0.6); // oreja der
-//glBegin(GL_POLYGON);
-//	glVertex3f(1.5,3,0);
-//	glVertex3f(1.5,2,0);
-//	glVertex3f(1,2,0);
-//	glVertex3f(1,3,0);
-//glEnd();
-//
-//glColor3f(0.0,0.0,0.0);    // borde oreja izq
-//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//glLineWidth(2);
-//glBegin(GL_POLYGON);
-//	glVertex3f(-1,3,0);
-//	glVertex3f(-1,2,0);
-//	glVertex3f(-1.5,2,0);
-//	glVertex3f(-1.5,3,0);
-//glEnd();
-//
-//
-//glColor3f(0.0,0.0,0.0);    // borde oreja der
-////glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//glLineWidth(2);
-//glBegin(GL_POLYGON);
-//	glVertex3f(1,3,0);
-//	glVertex3f(1,2,0);
-//	glVertex3f(1.5,2,0);
-//	glVertex3f(1.5,3,0);
-//glEnd();
-//
-//
-//glColor3f(0,0.0,1.0);
-//Circle(0.3,0.4,2.8,10,GL_FILL);
-//
-////glColor3f(0,0.0,1.0);
-//Circle(0.3,-0.4,2.8,10,GL_FILL);
-//
-//glColor3f(1.0,0.0,0.0);
-//float nariz[3][3]={{0.28,1.5,0},{-0.28,1.5,0.01},{0.0,2,0.01}};
-//Poligono_Solido(nariz,3);
-//
-//
-//glColor3f(1.0,0.5,0.0);
-//Circle(0.15,-0.39,1,10,GL_FILL);
-//Circle(0.15,0.39,1,10,GL_FILL);
-//
-//float boca[4][3]={{0.39,1.2,0.1},{0.39,0.8,0.01},{-0.39,0.8,0.01},{-0.39,1.2,0.01}};
-//Poligono_Solido(boca,4);
-
-
-//Circle (GLfloat radio, GLfloat cx, GLfloat cy, GLint n, GLenum modo)
-
-
-
+   DrawRobot(0,0,0, theta[BRAZOIZQ], theta[MANOIZQ], theta[BRAZODER],theta[MANODER], theta[PIERNAIZQ], theta[PIERNADER],theta[PELVIS]);
 
 }
 //**************************************************************************
@@ -472,21 +311,7 @@ void draw_scene(void)
 clear_window();
 change_observer();
 draw_axis();
-
- /* (Re)position the camera */
-//  glMatrixMode(GL_MODELVIEW);
-//  glLoadIdentity();
-//  gluLookAt(eye[0], eye[1], eye[2], at[0], at[1], at[2], 0, 1, 0);
-
-  /* Rotate the scene in the x and y directions */
-//  glRotatef(xRotate, 0, 1, 0);
-//  glRotatef(yRotate, 1, 0, 0);
-
-  draw_objects();
-  
-  /* Before returning, flush the graphics buffer
-   * so all graphics appear in the window */
-//  glFlush();
+draw_objects();
 glutSwapBuffers();
 }
 
@@ -515,71 +340,58 @@ glutPostRedisplay();
 // codigo de la tecla
 // posicion x del raton
 // posicion y del raton
+//
+//tomada de Alejandro Alcalde y modificada
 //***************************************************************************
 
 void normal_keys(unsigned char Tecla1,int x,int y){
 
 //if (toupper(Tecla1)=='Q') exit(0);
+    
   switch (Tecla1) {
     case 'q':
-      theta[LUA] += 5;
+      theta[BRAZOIZQ] += 5;
       break;
     case 'w':
-      theta[LUA] -= 5;
+      theta[BRAZOIZQ] -= 5;
       break;
     case 'e':
-      theta[LLA] += 5;
+      theta[MANOIZQ] += 5;
       break;
     case 'r':
-      theta[LLA] -= 5;
+      theta[MANOIZQ] -= 5;
       break;
     case 'a':
-      theta[RUA] += 5;
+      theta[BRAZODER] += 5;
       break;
     case 's':
-      theta[RUA] -= 5;
+      theta[BRAZODER] -= 5;
       break;
     case 'd':
-      theta[RLA] += 5;
+      theta[MANODER] += 5;
       break;
     case 'f':
-      theta[RLA] -= 5;
+      theta[MANODER] -= 5;
       break;
     case 't':
-      theta[LUL] += 5;
+      theta[PIERNAIZQ] += 5;
       break;
     case 'y':
-      theta[LUL] -= 5;
+      theta[PIERNAIZQ] -= 5;
       break;
     case 'k':
-          theta[PEL] += 5;
+          theta[PELVIS] += 5;
       break;
     case 'l':
-        theta[PEL] -=5;
+        theta[PELVIS] -=5;
       break;
           
-//    case 'u':
-//      theta[LLL] += 5;
-//      break;
-//    case 'i':
-//      theta[LLL] -= 5;
-//      break;
     case 'g':
-      theta[RUL] += 5;
+      theta[PIERNADER] += 5;
       break;
     case 'h':
-      theta[RUL] -= 5;
+      theta[PIERNADER] -= 5;
       break;
-//    case 'j':
-//      theta[RLL] += 5;
-//      break;
-//    case 'k':
-//      theta[RLL] -= 5;
-//      break;
-//    case 'b':
-//      dance = !dance;
-//      genDirec();
-//      break;
     case 'p':
       exit(0);
   }
@@ -587,7 +399,7 @@ void normal_keys(unsigned char Tecla1,int x,int y){
 }
 
 //***************************************************************************
-// Funcion llamada cuando se produce aprieta una tecla especial
+// Funcion manoIzqmada cuando se produce aprieta una tecla especial
 //
 // el evento manda a la funcion:
 // codigo de la tecla
@@ -610,34 +422,33 @@ switch (Tecla1){
 glutPostRedisplay();
 }
 
-
-
-//***************************************************************************
-// Funcion de incializacion
-//***************************************************************************
-/* Allocate quadrics with filled drawing style */
+//**********************************************/
+// función que inicializa las cuádricas       
+//                                            
+//tomada de Alejandro Alcalde y modificada    
+//**********************************************/
 void InitQuadrics() {
   t = gluNewQuadric();
   gluQuadricDrawStyle(t, GLU_FILL);
-  lua = gluNewQuadric();
-  gluQuadricDrawStyle(lua, GLU_FILL);
+  brazoIzq = gluNewQuadric();
+  gluQuadricDrawStyle(brazoIzq, GLU_FILL);
   h = gluNewQuadric();
   gluQuadricDrawStyle(h, GLU_FILL);
-  lla = gluNewQuadric();
-  gluQuadricDrawStyle(lla, GLU_FILL);
-  rua = gluNewQuadric();
-  gluQuadricDrawStyle(rua, GLU_FILL);
-  lul = gluNewQuadric();
-  gluQuadricDrawStyle(lul, GLU_FILL);
-  lll = gluNewQuadric();
-  gluQuadricDrawStyle(lll, GLU_FILL);
-  rul = gluNewQuadric();
-  gluQuadricDrawStyle(rul, GLU_FILL);
-  rll = gluNewQuadric();
-  gluQuadricDrawStyle(rll, GLU_FILL);
+  manoIzq = gluNewQuadric();
+  gluQuadricDrawStyle(manoIzq, GLU_FILL);
+  brazoDer = gluNewQuadric();
+  gluQuadricDrawStyle(brazoDer, GLU_FILL);
+  piernaIzq = gluNewQuadric();
+  gluQuadricDrawStyle(piernaIzq, GLU_FILL);
+  piernaDer = gluNewQuadric();
+  gluQuadricDrawStyle(piernaDer, GLU_FILL);
   pelvis=gluNewQuadric();
   gluQuadricDrawStyle(pelvis, GLU_FILL);  
 }
+//***************************************************************************
+// Funcion de incializacion
+// por Domingo Martín Perandrés
+//***************************************************************************
 
 void initialize(void)
 {
@@ -657,22 +468,10 @@ Observer_angle_y=0;
     
 glClearColor(1,1,1,1);
 
- //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-/* Set up perspective projection */
-//  glMatrixMode(GL_PROJECTION);
-//  glLoadIdentity();
-//  gluPerspective(60.0f, 1.0f, 10.0f, -10.0f);
-
-  /* Initialize the camera position */
-//  glMatrixMode(GL_MODELVIEW);
-//  glLoadIdentity();
-//  gluLookAt(eye[0], eye[1], eye[2], at[0], at[1], at[2], 0, 1, 0);
-
 // se habilita el z-bufer
 glEnable(GL_DEPTH_TEST);
 //
 change_projection();
-
 
  /* allocate quadrics with filled drawing style */
   InitQuadrics();
@@ -681,7 +480,7 @@ glViewport(0,0,UI_window_width,UI_window_height);
 
 
 //***************************************************************************
-// Programa principal
+// Programa principal - por Domingo Martín Perandrés
 //
 // Se encarga de iniciar la ventana, asignar las funciones e comenzar el
 // bucle de eventos
@@ -689,7 +488,6 @@ glViewport(0,0,UI_window_width,UI_window_height);
 
 int main(int argc, char **argv)
 {
-
 
 glutInit(&argc, argv);
 
