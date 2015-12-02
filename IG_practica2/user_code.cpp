@@ -180,7 +180,7 @@ void generaPorRevolucion(solido *malla, int rotaciones, int tapas) {
         
         GLfloat x = malla->ver[i].coord[0] * cos(angulo) + malla->ver[i].coord[2] * sin(angulo);
         GLfloat y = malla->ver[i].coord[1];
-        GLfloat z = malla->ver[i].coord[0]* -sin(angulo) + malla->ver[i].coord[2] * cos(angulo);
+        GLfloat z = malla->ver[i].coord[0] * -sin(angulo) + malla->ver[i].coord[2] * cos(angulo);
 
 
         malla->ver[i + generados].coord[0] = x;
@@ -190,7 +190,7 @@ void generaPorRevolucion(solido *malla, int rotaciones, int tapas) {
         
         num_ver+=1;
  
-        if (i < verticesSinrotar * rotaciones - verticesSinrotar){
+     if (i < verticesSinrotar * rotaciones - verticesSinrotar){
        if((num_ver % verticesSinrotar)==0){
             malla->car[j].ind_c[0]=i;
             malla->car[j].ind_c[1]=i+1;
