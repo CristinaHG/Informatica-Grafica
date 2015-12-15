@@ -14,6 +14,7 @@
 #include <math.h>
 #include <GL/gl.h>
 #include "SOIL.h"
+#include "tuplas.h"
 //#include <GL/glew.h>
 //#include <GL/glew.h>
 
@@ -71,7 +72,36 @@ static GLfloat theta[QUIT] = {0 };
 //GLuint g_SphereDisplayList = glGenLists(1);
 //GLUquadric* pSphereQuadric;
 GLUquadricObj *tierra;
+
+GLfloat globalAmbient[] = { 0.2, 0.2, 0.2, 1.0 };
+
+ 		
+//inicialmente todas son 0:
+
+
+//GLenum lightID = GL_LIGHT0;
 //
+//Tupla3f ambiental=Tupla3f(0.0,0.0,0.0);
+//Tupla3f difusa=Tupla3f(0.0,0.0,0.0) ;
+//Tupla3f especular=Tupla3f(0.0,0.0,0.0) ;
+//Tupla4f posicion=Tupla4f(0.0,0.0,0.0,0.0) ;
+//
+//Tupla3f spotDirection = Tupla3f( 0.0, 0.0, 1.0 );
+//float  spotExponent = 0.0;
+//float  spotCutoff = 180.0f;
+//float  constantAttenuation = 1.0;
+//float  linearAttenuation = 0.0;
+//float  quadraticAttenuation = 0.0;
+
+//GLenum m_LightID=lightID;
+ 
+Tupla4f m_Position;
+Tupla3f m_SpotDirection;
+float  m_SpotExponent;
+float  m_SpotCutoff;
+float  m_ConstantAttenuation;
+float  m_LinearAttenuation;
+float  m_QuadraticAttenuation;
 //pSphereQuadric=gluNewQuadric();
 //gluQuadricDrawStyle( pSphereQuadric, GLU_FILL );
 
@@ -115,41 +145,128 @@ GLuint LoadTexture( const char* texture )
     glEnable( GL_TEXTURE_2D );
     GLuint textureID = SOIL_load_OGL_texture( texture, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS );
     glBindTexture( GL_TEXTURE_2D, textureID );
- //   glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
- //   glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-//    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-//    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-  //  glBindTexture( GL_TEXTURE_2D, 0 );
- 
     return textureID;
 }
+
+struct Light{
+
+        GLenum lightID;
+        Tupla4f ambiental;// = Tupla4f( 0.0, 0.0, 0.0, 1.0 );
+        Tupla4f difusa; // = Tupla4f( 1.0, 1.0, 1.0, 1.0 );
+        Tupla4f especular; // = Tupla4f( 1.0, 1.0, 1.0, 1.0 );
+        Tupla4f position; // = Tupla4f( 0.0, 0.0, 1.0, 0.0 );
+        Tupla3f spotDirection; // = Tupla3f( 0.0, 0.0, 1.0 );
+        GLfloat  spotExponent; // = 0.0;
+        float  spotCutoff; // = 180.0;
+        float  constantAttenuation; // = 1.0;
+        float  linearAttenuation; // = 0.0;
+        float  quadraticAttenuation; // = 0.0;
+
+};
+
+struct Material
+{
+        Tupla4f ambiental;// = Tupla4f( 0.0, 0.0, 0.0, 1.0 );
+        Tupla4f difusa; // = Tupla4f( 1.0, 1.0, 1.0, 1.0 );
+        Tupla4f especular;
+        Tupla4f emission;// = color4(0.0, 0.0, 0.0, 1.0)
+        float brillo = 0; 
+
+};
+ 
+
+void ModifyLight(Light &light,GLenum id, Tupla4f l_amb,Tupla4f l_diff, Tupla4f esp, Tupla4f pos, Tupla3f spotD, GLfloat exp, 
+        float cutoff,float atenuacionCte, float atenuacionLin, float atenuacionCuadratica )
+{
+    light.lightID=id;
+    light.ambiental=l_amb;
+    light.difusa=l_diff;
+    light.especular=esp;
+    light.position=pos;
+    light.spotDirection=spotD;
+    light.spotExponent=exp;
+    light.spotCutoff=cutoff;
+    light.constantAttenuation=atenuacionCte;
+    light.linearAttenuation=atenuacionLin;
+    light.quadraticAttenuation=atenuacionCuadratica;
+
+}
+   
+void ModifyMaterial(Material &material,Tupla4f l_amb,Tupla4f l_diff, Tupla4f esp, Tupla4f em, float b )
+{
+    material.ambiental=l_amb;
+    material.difusa=l_diff;
+    material.especular=esp;
+    material.brillo=b;
+    material.emission=em;
+}
+
+
+
+
+void Activate(Light l)
+    {
+        glEnable(l.lightID );
+        glLightfv( l.lightID, GL_AMBIENT, &l.ambiental.coo[0]);
+        glLightfv( l.lightID, GL_DIFFUSE, &l.difusa.coo[0]);
+        glLightfv( l.lightID, GL_SPECULAR, &l.especular.coo[0] );
+        glLightfv( l.lightID, GL_POSITION, &l.position.coo[0] );
+        glLightfv( l.lightID, GL_SPOT_DIRECTION, &l.spotDirection.coo[0] );
+        glLightf( l.lightID, GL_SPOT_EXPONENT,l.spotExponent );
+        glLightf( l.lightID, GL_SPOT_CUTOFF, l.spotCutoff );
+        glLightf( l.lightID, GL_CONSTANT_ATTENUATION, l.constantAttenuation );
+        glLightf( l.lightID, GL_LINEAR_ATTENUATION, l.linearAttenuation );
+        glLightf( l.lightID, GL_QUADRATIC_ATTENUATION,l.quadraticAttenuation );
+    } 
+
+void Deactivate(Light l)
+    {
+        glDisable( l.lightID );
+    }
+
+
+
+
+
+
+
+
+void drawSun(){
+    
+    Light sun;
+    sun.lightID=GL_LIGHT0;
+    sun.ambiental=Tupla4f(0,0,0,1);
+    sun.difusa=Tupla4f(1,1,1,1);
+    sun.especular=Tupla4f(1,1,1,1);
+    sun.position=Tupla4f(0,0,0,0);
+}
+
 
 
 
 void drawEarth(){
+    
     GLuint texturaTierra=LoadTexture("tc-earth_daymap.jpg");
     cout<<"textura vale"<<texturaTierra;
-    glBindTexture( GL_TEXTURE_2D, texturaTierra );
-    //gluQuadricOrientation( pSphereQuadric, GLU_OUTSIDE );
+  //  glBindTexture( GL_TEXTURE_2D, texturaTierra );
     gluQuadricTexture( tierra, GL_TRUE );
-    gluQuadricNormals( tierra, GLU_SMOOTH ); 
+    //gluQuadricNormals( tierra, GLU_SMOOTH ); 
     glColor3f(1,1,1);
-    glRotatef( 200.0f, 90.0f, 200.0f, 200.0f );
-    gluSphere( tierra, 1.0, 360, 180 );
+    glRotatef( 200.0, 90.0, 200.0, 200.0 );
+    gluSphere( tierra, 5.0, 360, 180 );
 
 }
-
 
 
 
 
 void RenderScene()
-{
+{   
     glEnable( GL_NORMALIZE );
    
-
+    glLightModelfv( GL_LIGHT_MODEL_AMBIENT, globalAmbient );
     
-
+  //  glEnable( GL_LIGHTING );
 
 //glNewList( g_SphereDisplayList, GL_COMPILE );
 //{
@@ -165,8 +282,8 @@ void RenderScene()
 //    glLoadIdentity();                                                      
  
    // glTranslatef( 0.0f, 0.0f, -80.0f );
-     glPushMatrix();
- 
+    glPushMatrix();
+    glTranslatef( 0, 0, -5 );
     glRotatef(10, 0.0f, 0.0f, -1.0f ); // Rotate the earth around it's axis
    // glScalef( 12.756f, 12.756f, 12.756f );  // The earth's diameter is about 12,756 Km
     drawEarth();
@@ -463,6 +580,7 @@ glutSpecialFunc(special_keys);
 initialize();
 
 glEnable( GL_NORMALIZE );
+
 // inicio del bucle de eventos
 glutMainLoop();
 return 0;
