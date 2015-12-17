@@ -51,6 +51,7 @@ int UI_window_pos_x=50,UI_window_pos_y=50,UI_window_width=500,UI_window_height=5
 
 //piezas móviles
 enum {
+    SOL,
   TIERRA,
   QUIT
 };
@@ -67,11 +68,11 @@ enum {
 //GLUquadricObj *t, *h, *brazoIzq, *manoIzq, *brazoDer, *manoDer,*piernaIzq, *piernaDer, *pelvis;
 
 //angulo inicial
-static GLfloat theta[QUIT] = {0 };
+static GLfloat theta[QUIT] = {0,0 };
 
 //GLuint g_SphereDisplayList = glGenLists(1);
 //GLUquadric* pSphereQuadric;
-GLUquadricObj *tierra;
+GLUquadricObj *tierra, *sol;
 
 GLfloat globalAmbient[] = { 0.2, 0.2, 0.2, 1.0 };
 
@@ -170,7 +171,7 @@ struct Material
         Tupla4f difusa; // = Tupla4f( 1.0, 1.0, 1.0, 1.0 );
         Tupla4f especular;
         Tupla4f emission;// = color4(0.0, 0.0, 0.0, 1.0)
-        float brillo = 0; 
+        float brillo; // = 0; 
 
 };
  
@@ -202,8 +203,6 @@ void ModifyMaterial(Material &material,Tupla4f l_amb,Tupla4f l_diff, Tupla4f esp
 }
 
 
-
-
 void Activate(Light l)
     {
         glEnable(l.lightID );
@@ -225,13 +224,22 @@ void Deactivate(Light l)
     }
 
 
+void Apply(Material m)
+    {
+        glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, &m.ambiental.coo[0] );
+        glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, &m.difusa.coo[0] );
+        glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, &m.especular.coo[0] );
+        glMaterialfv( GL_FRONT_AND_BACK, GL_EMISSION, &m.emission.coo[0] );
+        glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, m.brillo );
+    }
 
 
 
 
 
 
-void drawSun(){
+
+Light setSunlight(){
     
     Light sun;
     sun.lightID=GL_LIGHT0;
@@ -239,6 +247,13 @@ void drawSun(){
     sun.difusa=Tupla4f(1,1,1,1);
     sun.especular=Tupla4f(1,1,1,1);
     sun.position=Tupla4f(0,0,0,0);
+    sun.spotDirection=Tupla3f( 0.0, 0.0, 1.0 );
+    sun.spotExponent=0.0;
+    sun.spotCutoff=180.0;
+    sun.constantAttenuation=1.0;
+    sun.linearAttenuation= 0.0;
+    sun.quadraticAttenuation=0.0;
+    return sun;
 }
 
 
@@ -252,11 +267,42 @@ void drawEarth(){
     gluQuadricTexture( tierra, GL_TRUE );
     //gluQuadricNormals( tierra, GLU_SMOOTH ); 
     glColor3f(1,1,1);
-    glRotatef( 200.0, 90.0, 200.0, 200.0 );
-    gluSphere( tierra, 5.0, 360, 180 );
+    glRotatef( 100, 100, 0, 0 );
+    gluSphere( tierra, 2.0, 360, 180 );
 
 }
 
+
+void drawSun(){
+    
+//    GLuint texturaTierra=LoadTexture("tc-earth_daymap.jpg");
+//    cout<<"textura vale"<<texturaTierra;
+  //  glBindTexture( GL_TEXTURE_2D, texturaTierra );
+    gluQuadricTexture( sol, GL_FALSE);
+    //gluQuadricNormals( tierra, GLU_SMOOTH ); 
+    glColor3f(0,0,0);
+    glRotatef( 100, 100, 0, 0 );
+    gluSphere( sol, 2.0, 360, 180 );
+
+}
+
+
+
+
+void DefineMaterials(Material &mSol, Material &mTierra){
+
+    
+    mSol.ambiental=Tupla4f(0,0,0,1);
+    mSol.difusa=Tupla4f(1,1,1,1);
+    mSol.especular=Tupla4f(1,1,1,1);
+
+    mTierra.ambiental=Tupla4f(0.2, 0.2, 0.2, 1.0);
+    mTierra.difusa=Tupla4f( 1, 1, 1, 1);
+    mTierra.especular=Tupla4f( 1, 1, 1, 1);
+    mTierra.emission=Tupla4f(0, 0, 0, 1);
+    mTierra.brillo=50;
+
+}
 
 
 
@@ -266,26 +312,34 @@ void RenderScene()
    
     glLightModelfv( GL_LIGHT_MODEL_AMBIENT, globalAmbient );
     
-  //  glEnable( GL_LIGHTING );
-
-//glNewList( g_SphereDisplayList, GL_COMPILE );
-//{
-
-  // glutSolidSphere(2,360,180);
-//}
-//glEndList();
-//gluDeleteQuadric( pSphereQuadric );
+    Material mS,mE;
+    DefineMaterials(mS,mE);
+    glEnable( GL_LIGHTING );
+  
     
-    
-    
-//  glMatrixMode( GL_MODELVIEW );   
-//    glLoadIdentity();                                                      
+ // glMatrixMode( GL_MODELVIEW );   
+  // glLoadIdentity();                                                      
  
-   // glTranslatef( 0.0f, 0.0f, -80.0f );
+    glTranslatef( 0.0f, 0.0f, -80.0f );
+   
+   glPushMatrix();
+    // In this simulation, the sun rotates around the earth!
+    glRotatef( 0, 0.0f, -1.0f, 0.0f );
+    glTranslatef( 90.0f, 0.0f, 0.0f );
+ 
+    Activate(setSunlight());
+ 
+    glDisable( GL_TEXTURE_2D );
+    glDisable( GL_LIGHTING );
+    glColor3f( 0, 0, 0 );
+    drawSun();
+    glPopMatrix();
+    //glEnable( GL_LIGHTING );
     glPushMatrix();
     glTranslatef( 0, 0, -5 );
     glRotatef(10, 0.0f, 0.0f, -1.0f ); // Rotate the earth around it's axis
    // glScalef( 12.756f, 12.756f, 12.756f );  // The earth's diameter is about 12,756 Km
+    Apply(mE);
     drawEarth();
  //   glEnable( GL_TEXTURE_2D );
    // glBindTexture( GL_TEXTURE_2D, textureID );
@@ -479,6 +533,8 @@ glutPostRedisplay();
 void InitQuadrics() {
   tierra=gluNewQuadric();
   gluQuadricDrawStyle(tierra,GLU_FILL);
+  sol=gluNewQuadric();
+  gluQuadricDrawStyle(sol,GLU_FILL);
 //  t = gluNewQuadric();
 //  gluQuadricDrawStyle(t, GLU_FILL);
 //  brazoIzq = gluNewQuadric();
