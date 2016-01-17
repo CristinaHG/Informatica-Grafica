@@ -226,14 +226,21 @@ void Deactivate(Light l)
 
 void Apply(Material m)
     {
-        glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, &m.ambiental.coo[0] );
-        glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, &m.difusa.coo[0] );
-        glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, &m.especular.coo[0] );
-        glMaterialfv( GL_FRONT_AND_BACK, GL_EMISSION, &m.emission.coo[0] );
+    
+   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+   glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
+   glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+ 
+   float ambient[4]={m.ambiental.coo[0],m.ambiental.coo[1],m.ambiental.coo[2],m.ambiental.coo[3]};
+   float dif[4]={m.difusa.coo[0],m.difusa.coo[1],m.difusa.coo[2],m.difusa.coo[3]};
+   float esp[4]={m.especular.coo[0],m.especular.coo[1],m.especular.coo[2],m.especular.coo[3]};
+   float emi[4]={m.emission.coo[0],m.emission.coo[1],m.emission.coo[2],m.emission.coo[3]};
+        glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, ambient );
+        glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, dif );
+        glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, esp );
+        glMaterialfv( GL_FRONT_AND_BACK, GL_EMISSION, emi );
         glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, m.brillo );
     }
-
-
 
 
 
@@ -246,7 +253,7 @@ Light setSunlight(){
     sun.ambiental=Tupla4f(0,0,0,1);
     sun.difusa=Tupla4f(1,1,1,1);
     sun.especular=Tupla4f(1,1,1,1);
-    sun.position=Tupla4f(0,0,0,0);
+    sun.position=Tupla4f(0,0,0,1);
     sun.spotDirection=Tupla3f( 0.0, 0.0, 1.0 );
     sun.spotExponent=0.0;
     sun.spotCutoff=180.0;
@@ -257,16 +264,50 @@ Light setSunlight(){
 }
 
 
+void DefineMaterial(Material &material){
+    
+    material.ambiental=Tupla4f(0.2, 0.2, 0.2, 1.0);
+    material.difusa=Tupla4f(0.8, 0.8, 0.8, 1.0);
+    material.especular=Tupla4f(0.0, 0.0, 0.0, 1.0);
+    material.emission=Tupla4f(0.0, 0.0, 0.0, 1.0);
+    material.brillo=0;
+    
+    
+//    mSol.ambiental=Tupla4f(0,0,0,1);
+//    mSol.difusa=Tupla4f(1,1,1,1);
+//    mSol.especular=Tupla4f(1,1,1,1);
+//
+//    mTierra.ambiental=Tupla4f(0.2, 0.2, 0.2, 1.0);
+//    mTierra.difusa=Tupla4f( 1, 1, 1, 1);
+//    mTierra.especular=Tupla4f( 1, 1, 1, 1);
+//    mTierra.emission=Tupla4f(0, 0, 0, 1);
+//    mTierra.brillo=50;
+
+}
+
+void modificaMaterial(Material &material, Tupla4f a, Tupla4f d, Tupla4f es,Tupla4f em,float brillo){
+
+    material.ambiental=a;
+    material.difusa=d;
+    material.emission=em;
+    material.especular=es;
+    material.brillo=brillo;
+
+}
+
 
 
 void drawEarth(){
-    
+    Material mS,mE;
+    DefineMaterial(mE);
+    modificaMaterial(mE,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0, 0, 0, 1),50);
     GLuint texturaTierra=LoadTexture("tc-earth_daymap.jpg");
     cout<<"textura vale"<<texturaTierra;
   //  glBindTexture( GL_TEXTURE_2D, texturaTierra );
     gluQuadricTexture( tierra, GL_TRUE );
-    //gluQuadricNormals( tierra, GLU_SMOOTH ); 
-    glColor3f(1,1,1);
+    gluQuadricNormals( tierra, GLU_SMOOTH ); 
+    Apply(mE);
+    //glColor3f(1,1,1);
     glRotatef( 100, 100, 0, 0 );
     gluSphere( tierra, 2.0, 360, 180 );
 
@@ -278,29 +319,17 @@ void drawSun(){
 //    GLuint texturaTierra=LoadTexture("tc-earth_daymap.jpg");
 //    cout<<"textura vale"<<texturaTierra;
   //  glBindTexture( GL_TEXTURE_2D, texturaTierra );
-    gluQuadricTexture( sol, GL_FALSE);
-    //gluQuadricNormals( tierra, GLU_SMOOTH ); 
-    glColor3f(0,0,0);
-    glRotatef( 100, 100, 0, 0 );
-    gluSphere( sol, 2.0, 360, 180 );
-
-}
-
-
-
-
-void DefineMaterials(Material &mSol, Material &mTierra){
-
+     Material mS;
+    DefineMaterial(mS);
+    modificaMaterial(mS,Tupla4f(0.0, 0.0, 0.0, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0.0, 0.0, 0.0, 1.0),0);
+    gluQuadricTexture( sol, GL_TRUE);
+    gluQuadricNormals(sol, GLU_SMOOTH ); 
+    gluQuadricNormals( tierra, GLU_SMOOTH );
+    Apply(mS);
+    glColor3f(1,1,1);
+    //glRotatef( 100, 100, 0, 0 );
+    gluSphere( sol, 0.8, 360, 180 );
     
-    mSol.ambiental=Tupla4f(0,0,0,1);
-    mSol.difusa=Tupla4f(1,1,1,1);
-    mSol.especular=Tupla4f(1,1,1,1);
-
-    mTierra.ambiental=Tupla4f(0.2, 0.2, 0.2, 1.0);
-    mTierra.difusa=Tupla4f( 1, 1, 1, 1);
-    mTierra.especular=Tupla4f( 1, 1, 1, 1);
-    mTierra.emission=Tupla4f(0, 0, 0, 1);
-    mTierra.brillo=50;
 
 }
 
@@ -308,38 +337,47 @@ void DefineMaterials(Material &mSol, Material &mTierra){
 
 void RenderScene()
 {   
+    // glMatrixMode( GL_MODELVIEW );                                           // Switch to modelview matrix mode
+    //glLoadIdentity();          
+    //glEnable( GL_LIGHTING );
+    
     glEnable( GL_NORMALIZE );
-   
+    //glShadeModel( GL_SMOOTH );
+    glDisable(GL_COLOR_MATERIAL);
+    
     glLightModelfv( GL_LIGHT_MODEL_AMBIENT, globalAmbient );
     
-    Material mS,mE;
-    DefineMaterials(mS,mE);
-    glEnable( GL_LIGHTING );
+    //glEnable( GL_LIGHTING );
   
     
  // glMatrixMode( GL_MODELVIEW );   
   // glLoadIdentity();                                                      
  
-    glTranslatef( 0.0f, 0.0f, -80.0f );
-   
+    
    glPushMatrix();
     // In this simulation, the sun rotates around the earth!
-    glRotatef( 0, 0.0f, -1.0f, 0.0f );
-    glTranslatef( 90.0f, 0.0f, 0.0f );
- 
-    Activate(setSunlight());
- 
+//    glRotatef( 0, 0.0f, -1.0f, 0.0f );
+//    glTranslatef( 10.0f, 0.0f, 0.0f );
+// 
+    Light sunlight=setSunlight();
+    Activate(sunlight);
+// glEnable(GL_LIGHT0);
     glDisable( GL_TEXTURE_2D );
     glDisable( GL_LIGHTING );
-    glColor3f( 0, 0, 0 );
+    
+    //glColor3f( 1, 1, 1 );
+    //Apply(mS);
     drawSun();
     glPopMatrix();
-    //glEnable( GL_LIGHTING );
+    glEnable( GL_LIGHTING );
+    glEnable(GL_LIGHT0);
     glPushMatrix();
-    glTranslatef( 0, 0, -5 );
+    //glTranslatef( 0, 0, -5 );
+    glTranslatef( 0.0f, 0.0f, -30.0f );
+   
     glRotatef(10, 0.0f, 0.0f, -1.0f ); // Rotate the earth around it's axis
    // glScalef( 12.756f, 12.756f, 12.756f );  // The earth's diameter is about 12,756 Km
-    Apply(mE);
+    
     drawEarth();
  //   glEnable( GL_TEXTURE_2D );
    // glBindTexture( GL_TEXTURE_2D, textureID );
@@ -573,11 +611,12 @@ Observer_angle_y=0;
 // se indica cual sera el color para limpiar la ventana	(r,v,a,al)
 // blanco=(1,1,1,1) rojo=(1,0,0,1), ...
     
-glClearColor(1,1,1,1);
-
+glClearColor(0,0,0,0);
 // se habilita el z-bufer
 glEnable(GL_DEPTH_TEST);
 //
+
+//glEnable( GL_NORMALIZE );
 change_projection();
 
  /* allocate quadrics with filled drawing style */
@@ -635,7 +674,7 @@ glutSpecialFunc(special_keys);
 // funcion de inicialización
 initialize();
 
-glEnable( GL_NORMALIZE );
+//glEnable( GL_NORMALIZE );
 
 // inicio del bucle de eventos
 glutMainLoop();
