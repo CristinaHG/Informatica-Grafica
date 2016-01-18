@@ -331,16 +331,29 @@ void drawVenus(){
     Material mM;
     DefineMaterial(mM);
     modificaMaterial(mM,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
-    GLuint texturaMercurio=LoadTexture("texture_mercury.jpg");
-    glBindTexture( GL_TEXTURE_2D, texturaMercurio );
-    gluQuadricTexture( mercurio, GL_TRUE );
-    gluQuadricNormals( mercurio, GLU_SMOOTH ); 
+    GLuint texturaVenus=LoadTexture("texture_venus_atmosphere.jpg");
+    glBindTexture( GL_TEXTURE_2D, texturaVenus );
+    gluQuadricTexture( venus, GL_TRUE );
+    gluQuadricNormals( venus, GLU_SMOOTH ); 
     Apply(mM);
 //    glRotatef( 100, 100, 0, 0 );
-    gluSphere( mercurio, 1.0, 360, 180 );
+    gluSphere( venus, 1.5, 360, 180 );
 
 }
 
+void drawVenus(){
+    Material mM;
+    DefineMaterial(mM);
+    modificaMaterial(mM,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    GLuint texturaVenus=LoadTexture("texture_venus_atmosphere.jpg");
+    glBindTexture( GL_TEXTURE_2D, texturaVenus );
+    gluQuadricTexture( venus, GL_TRUE );
+    gluQuadricNormals( venus, GLU_SMOOTH ); 
+    Apply(mM);
+//    glRotatef( 100, 100, 0, 0 );
+    gluSphere( venus, 1.5, 360, 180 );
+
+}
 
 void drawSun(){
     
@@ -412,6 +425,11 @@ glPopMatrix();
 glPushMatrix();
 glTranslatef( 0,0,-5);
 drawMercury();
+glPopMatrix();
+
+glPushMatrix();
+glTranslatef( 2,0,-10);
+drawVenus();
 glPopMatrix();
     
 }
@@ -605,6 +623,8 @@ void InitQuadrics() {
   gluQuadricDrawStyle(sol,GLU_FILL);
   mercurio=gluNewQuadric();
   gluQuadricDrawStyle(mercurio,GLU_FILL);
+  venus=gluNewQuadric();
+  gluQuadricDrawStyle(venus,GLU_FILL);
 //  t = gluNewQuadric();
 //  gluQuadricDrawStyle(t, GLU_FILL);
 //  brazoIzq = gluNewQuadric();
