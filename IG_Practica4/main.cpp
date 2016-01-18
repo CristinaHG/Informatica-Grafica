@@ -72,9 +72,9 @@ static GLfloat theta[QUIT] = {0,0 };
 
 //GLuint g_SphereDisplayList = glGenLists(1);
 //GLUquadric* pSphereQuadric;
-GLUquadricObj *tierra, *sol;
+GLUquadricObj *sol, *mercurio, *venus, *tierra, *marte, *jupiter,*saturno, *urano, *neptuno;
 
-GLfloat globalAmbient[] = { 0.2, 0.2, 0.2, 1.0 };
+GLfloat globalAmbient[] = { 1, 1, 0.2, 1.0 };
 
  		
 //inicialmente todas son 0:
@@ -156,12 +156,12 @@ struct Light{
         Tupla4f difusa; // = Tupla4f( 1.0, 1.0, 1.0, 1.0 );
         Tupla4f especular; // = Tupla4f( 1.0, 1.0, 1.0, 1.0 );
         Tupla4f position; // = Tupla4f( 0.0, 0.0, 1.0, 0.0 );
-        Tupla3f spotDirection; // = Tupla3f( 0.0, 0.0, 1.0 );
-        GLfloat  spotExponent; // = 0.0;
-        float  spotCutoff; // = 180.0;
-        float  constantAttenuation; // = 1.0;
-        float  linearAttenuation; // = 0.0;
-        float  quadraticAttenuation; // = 0.0;
+//        Tupla3f spotDirection; // = Tupla3f( 0.0, 0.0, 1.0 );
+//        GLfloat  spotExponent; // = 0.0;
+//        float  spotCutoff; // = 180.0;
+//        float  constantAttenuation; // = 1.0;
+//        float  linearAttenuation; // = 0.0;
+//        float  quadraticAttenuation; // = 0.0;
 
 };
 
@@ -184,12 +184,12 @@ void ModifyLight(Light &light,GLenum id, Tupla4f l_amb,Tupla4f l_diff, Tupla4f e
     light.difusa=l_diff;
     light.especular=esp;
     light.position=pos;
-    light.spotDirection=spotD;
-    light.spotExponent=exp;
-    light.spotCutoff=cutoff;
-    light.constantAttenuation=atenuacionCte;
-    light.linearAttenuation=atenuacionLin;
-    light.quadraticAttenuation=atenuacionCuadratica;
+//    light.spotDirection=spotD;
+//    light.spotExponent=exp;
+//    light.spotCutoff=cutoff;
+//    light.constantAttenuation=atenuacionCte;
+//    light.linearAttenuation=atenuacionLin;
+//    light.quadraticAttenuation=atenuacionCuadratica;
 
 }
    
@@ -210,12 +210,12 @@ void Activate(Light l)
         glLightfv( l.lightID, GL_DIFFUSE, &l.difusa.coo[0]);
         glLightfv( l.lightID, GL_SPECULAR, &l.especular.coo[0] );
         glLightfv( l.lightID, GL_POSITION, &l.position.coo[0] );
-        glLightfv( l.lightID, GL_SPOT_DIRECTION, &l.spotDirection.coo[0] );
-        glLightf( l.lightID, GL_SPOT_EXPONENT,l.spotExponent );
-        glLightf( l.lightID, GL_SPOT_CUTOFF, l.spotCutoff );
-        glLightf( l.lightID, GL_CONSTANT_ATTENUATION, l.constantAttenuation );
-        glLightf( l.lightID, GL_LINEAR_ATTENUATION, l.linearAttenuation );
-        glLightf( l.lightID, GL_QUADRATIC_ATTENUATION,l.quadraticAttenuation );
+//        glLightfv( l.lightID, GL_SPOT_DIRECTION, &l.spotDirection.coo[0] );
+//        glLightf( l.lightID, GL_SPOT_EXPONENT,l.spotExponent );
+//        glLightf( l.lightID, GL_SPOT_CUTOFF, l.spotCutoff );
+//        glLightf( l.lightID, GL_CONSTANT_ATTENUATION, l.constantAttenuation );
+//        glLightf( l.lightID, GL_LINEAR_ATTENUATION, l.linearAttenuation );
+//        glLightf( l.lightID, GL_QUADRATIC_ATTENUATION,l.quadraticAttenuation );
     } 
 
 void Deactivate(Light l)
@@ -254,12 +254,12 @@ Light setSunlight(){
     sun.difusa=Tupla4f(1,1,1,1);
     sun.especular=Tupla4f(1,1,1,1);
     sun.position=Tupla4f(0,0,0,1);
-    sun.spotDirection=Tupla3f( 0.0, 0.0, 1.0 );
-    sun.spotExponent=0.0;
-    sun.spotCutoff=180.0;
-    sun.constantAttenuation=1.0;
-    sun.linearAttenuation= 0.0;
-    sun.quadraticAttenuation=0.0;
+//    sun.spotDirection=Tupla3f( 0.0, 0.0, 1.0 );
+//    sun.spotExponent=0.3;
+//    sun.spotCutoff=300.0;
+//    sun.constantAttenuation=0.5;
+//    sun.linearAttenuation= 0.0;
+//    sun.quadraticAttenuation=0.0;
     return sun;
 }
 
@@ -300,10 +300,10 @@ void modificaMaterial(Material &material, Tupla4f a, Tupla4f d, Tupla4f es,Tupla
 void drawEarth(){
     Material mS,mE;
     DefineMaterial(mE);
-    modificaMaterial(mE,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0, 0, 0, 1),50);
+    modificaMaterial(mE,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0,0,0 ,0 ),20);
     GLuint texturaTierra=LoadTexture("tc-earth_daymap.jpg");
     cout<<"textura vale"<<texturaTierra;
-  //  glBindTexture( GL_TEXTURE_2D, texturaTierra );
+    glBindTexture( GL_TEXTURE_2D, texturaTierra );
     gluQuadricTexture( tierra, GL_TRUE );
     gluQuadricNormals( tierra, GLU_SMOOTH ); 
     Apply(mE);
@@ -313,24 +313,50 @@ void drawEarth(){
 
 }
 
+void drawMercury(){
+    Material mM;
+    DefineMaterial(mM);
+    modificaMaterial(mM,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    GLuint texturaMercurio=LoadTexture("texture_mercury.jpg");
+    glBindTexture( GL_TEXTURE_2D, texturaMercurio );
+    gluQuadricTexture( mercurio, GL_TRUE );
+    gluQuadricNormals( mercurio, GLU_SMOOTH ); 
+    Apply(mM);
+//    glRotatef( 100, 100, 0, 0 );
+    gluSphere( mercurio, 1.0, 360, 180 );
+
+}
+
+void drawVenus(){
+    Material mM;
+    DefineMaterial(mM);
+    modificaMaterial(mM,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    GLuint texturaMercurio=LoadTexture("texture_mercury.jpg");
+    glBindTexture( GL_TEXTURE_2D, texturaMercurio );
+    gluQuadricTexture( mercurio, GL_TRUE );
+    gluQuadricNormals( mercurio, GLU_SMOOTH ); 
+    Apply(mM);
+//    glRotatef( 100, 100, 0, 0 );
+    gluSphere( mercurio, 1.0, 360, 180 );
+
+}
+
 
 void drawSun(){
     
-//    GLuint texturaTierra=LoadTexture("tc-earth_daymap.jpg");
+    GLuint texturaSol=LoadTexture("texture_sun.jpg");
 //    cout<<"textura vale"<<texturaTierra;
-  //  glBindTexture( GL_TEXTURE_2D, texturaTierra );
+    glBindTexture( GL_TEXTURE_2D, texturaSol );
      Material mS;
     DefineMaterial(mS);
-    modificaMaterial(mS,Tupla4f(0.0, 0.0, 0.0, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0.0, 0.0, 0.0, 1.0),0);
+    modificaMaterial(mS,Tupla4f(1,1, 1, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0.0, 0.0, 0.0, 1.0),10);
     gluQuadricTexture( sol, GL_TRUE);
     gluQuadricNormals(sol, GLU_SMOOTH ); 
-    gluQuadricNormals( tierra, GLU_SMOOTH );
     Apply(mS);
     glColor3f(1,1,1);
     //glRotatef( 100, 100, 0, 0 );
-    gluSphere( sol, 0.8, 360, 180 );
+    gluSphere( sol, 1.3, 360, 180 );
     
-
 }
 
 
@@ -339,19 +365,20 @@ void RenderScene()
 {   
     // glMatrixMode( GL_MODELVIEW );                                           // Switch to modelview matrix mode
     //glLoadIdentity();          
-    //glEnable( GL_LIGHTING );
+//    glEnable( GL_LIGHTING );
     
     glEnable( GL_NORMALIZE );
+    glEnable(GL_LIGHT0);
     //glShadeModel( GL_SMOOTH );
-    glDisable(GL_COLOR_MATERIAL);
+    //glDisable(GL_COLOR_MATERIAL);
     
     glLightModelfv( GL_LIGHT_MODEL_AMBIENT, globalAmbient );
     
     //glEnable( GL_LIGHTING );
   
     
- // glMatrixMode( GL_MODELVIEW );   
-  // glLoadIdentity();                                                      
+//  glMatrixMode( GL_MODELVIEW );   
+//   glLoadIdentity();                                                      
  
     
    glPushMatrix();
@@ -361,7 +388,6 @@ void RenderScene()
 // 
     Light sunlight=setSunlight();
     Activate(sunlight);
-// glEnable(GL_LIGHT0);
     glDisable( GL_TEXTURE_2D );
     glDisable( GL_LIGHTING );
     
@@ -370,18 +396,22 @@ void RenderScene()
     drawSun();
     glPopMatrix();
     glEnable( GL_LIGHTING );
-    glEnable(GL_LIGHT0);
+   // glEnable(GL_LIGHT0);
     glPushMatrix();
     //glTranslatef( 0, 0, -5 );
-    glTranslatef( 0.0f, 0.0f, -30.0f );
+    glTranslatef( 0.0f, 0.0f, -20.0f );
    
-    glRotatef(10, 0.0f, 0.0f, -1.0f ); // Rotate the earth around it's axis
+    //glRotatef(10, 0.0f, 0.0f, -1.0f ); // Rotate the earth around it's axis
    // glScalef( 12.756f, 12.756f, 12.756f );  // The earth's diameter is about 12,756 Km
     
     drawEarth();
  //   glEnable( GL_TEXTURE_2D );
    // glBindTexture( GL_TEXTURE_2D, textureID );
     //g_EarthMaterial.Apply();
+glPopMatrix();
+glPushMatrix();
+glTranslatef( 0,0,-5);
+drawMercury();
 glPopMatrix();
     
 }
@@ -573,6 +603,8 @@ void InitQuadrics() {
   gluQuadricDrawStyle(tierra,GLU_FILL);
   sol=gluNewQuadric();
   gluQuadricDrawStyle(sol,GLU_FILL);
+  mercurio=gluNewQuadric();
+  gluQuadricDrawStyle(mercurio,GLU_FILL);
 //  t = gluNewQuadric();
 //  gluQuadricDrawStyle(t, GLU_FILL);
 //  brazoIzq = gluNewQuadric();
