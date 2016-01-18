@@ -417,6 +417,20 @@ void drawUranus(){
 }
 
 
+void drawNeptune(){
+    Material mN;
+    DefineMaterial(mN);
+    modificaMaterial(mN,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    GLuint texturaNeptuno=LoadTexture("texture_neptune.jpg");
+    glBindTexture( GL_TEXTURE_2D, texturaNeptuno);
+    gluQuadricTexture( neptuno, GL_TRUE );
+    gluQuadricNormals( neptuno, GLU_SMOOTH ); 
+    Apply(mN);
+//    glRotatef( 100, 100, 0, 0 );
+    glRotatef( 100, 100, 0, 0 );
+    gluSphere( neptuno,1.5, 360, 180 );
+
+}
 
 
 void drawSun(){
@@ -515,6 +529,11 @@ glTranslatef( -3,0,-15);
   glPushMatrix();
   glTranslatef( -10,0,-30);
  drawUranus();
+  glPopMatrix();
+  
+  glPushMatrix();
+   glTranslatef( -15,0,-35);
+   drawNeptune();
   glPopMatrix();
 }
 //**************************************************************************
@@ -720,6 +739,9 @@ void InitQuadrics() {
   
    urano=gluNewQuadric();
   gluQuadricDrawStyle(urano,GLU_FILL);
+  
+   neptuno=gluNewQuadric();
+  gluQuadricDrawStyle(neptuno,GLU_FILL);
 //  t = gluNewQuadric();
 //  gluQuadricDrawStyle(t, GLU_FILL);
 //  brazoIzq = gluNewQuadric();
