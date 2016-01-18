@@ -35,21 +35,8 @@ GLfloat Window_width,Window_height,Front_plane,Back_plane;
 // variables que determninan la posicion y tamaño de la ventana X
 int UI_window_pos_x=50,UI_window_pos_y=50,UI_window_width=500,UI_window_height=500;
 
-//GL_GLEXT_PROTOTYPES=0;
-//GLuint texturaTierra= SOIL_load_OGL_texture("IG_Practica4/Earth.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
 
-//glEnable(GL_TEXTURE_2D);
-//glBindTexture(GL_TEXTURE_2D,texturaTierra);
-//    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-//    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-//    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-//    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-//    glBindTexture( GL_TEXTURE_2D, 0 );
-
-
-
-
-//piezas móviles
+//cuerpos celestes
 enum {
     SOL,
   MERCURIO,
@@ -64,12 +51,9 @@ enum {
   QUIT
 };
 
-//variables de tamaño
-
-//GLUquadricObj *t, *h, *brazoIzq, *manoIzq, *brazoDer, *manoDer,*piernaIzq, *piernaDer, *pelvis;
-
 //angulo inicial
 static GLfloat theta[QUIT] = {0,0,0,0, 0, 0, 0,0, 0.0, 0.0 };
+
 
 //GLuint g_SphereDisplayList = glGenLists(1);
 //GLUquadric* pSphereQuadric;
@@ -78,37 +62,6 @@ GLUquadricObj *sol, *mercurio, *venus, *tierra, *marte, *jupiter,*saturno,*satur
 GLfloat globalAmbient[] = { 1, 1, 0.2, 1.0 };
 
  		
-//inicialmente todas son 0:
-
-
-//GLenum lightID = GL_LIGHT0;
-//
-//Tupla3f ambiental=Tupla3f(0.0,0.0,0.0);
-//Tupla3f difusa=Tupla3f(0.0,0.0,0.0) ;
-//Tupla3f especular=Tupla3f(0.0,0.0,0.0) ;
-//Tupla4f posicion=Tupla4f(0.0,0.0,0.0,0.0) ;
-//
-//Tupla3f spotDirection = Tupla3f( 0.0, 0.0, 1.0 );
-//float  spotExponent = 0.0;
-//float  spotCutoff = 180.0f;
-//float  constantAttenuation = 1.0;
-//float  linearAttenuation = 0.0;
-//float  quadraticAttenuation = 0.0;
-
-//GLenum m_LightID=lightID;
- 
-Tupla4f m_Position;
-Tupla3f m_SpotDirection;
-float  m_SpotExponent;
-float  m_SpotCutoff;
-float  m_ConstantAttenuation;
-float  m_LinearAttenuation;
-float  m_QuadraticAttenuation;
-//pSphereQuadric=gluNewQuadric();
-//gluQuadricDrawStyle( pSphereQuadric, GLU_FILL );
-
-
-
 //**************************************************************************
 // Funcion que dibuja circulos
 //***************************************************************************
@@ -153,10 +106,10 @@ GLuint LoadTexture( const char* texture )
 struct Light{
 
         GLenum lightID;
-        Tupla4f ambiental;// = Tupla4f( 0.0, 0.0, 0.0, 1.0 );
-        Tupla4f difusa; // = Tupla4f( 1.0, 1.0, 1.0, 1.0 );
-        Tupla4f especular; // = Tupla4f( 1.0, 1.0, 1.0, 1.0 );
-        Tupla4f position; // = Tupla4f( 0.0, 0.0, 1.0, 0.0 );
+        Tupla4f ambiental;
+        Tupla4f difusa; 
+        Tupla4f especular;
+        Tupla4f position;
 //        Tupla3f spotDirection; // = Tupla3f( 0.0, 0.0, 1.0 );
 //        GLfloat  spotExponent; // = 0.0;
 //        float  spotCutoff; // = 180.0;
@@ -168,39 +121,22 @@ struct Light{
 
 struct Material
 {
-        Tupla4f ambiental;// = Tupla4f( 0.0, 0.0, 0.0, 1.0 );
-        Tupla4f difusa; // = Tupla4f( 1.0, 1.0, 1.0, 1.0 );
+        Tupla4f ambiental;
+        Tupla4f difusa; 
         Tupla4f especular;
-        Tupla4f emission;// = color4(0.0, 0.0, 0.0, 1.0)
-        float brillo; // = 0; 
+        Tupla4f emission;
+        float brillo; 
 
 };
  
 
-void ModifyLight(Light &light,GLenum id, Tupla4f l_amb,Tupla4f l_diff, Tupla4f esp, Tupla4f pos, Tupla3f spotD, GLfloat exp, 
-        float cutoff,float atenuacionCte, float atenuacionLin, float atenuacionCuadratica )
+void ModifyLight(Light &light,GLenum id, Tupla4f l_amb,Tupla4f l_diff, Tupla4f esp, Tupla4f pos)
 {
     light.lightID=id;
     light.ambiental=l_amb;
     light.difusa=l_diff;
     light.especular=esp;
     light.position=pos;
-//    light.spotDirection=spotD;
-//    light.spotExponent=exp;
-//    light.spotCutoff=cutoff;
-//    light.constantAttenuation=atenuacionCte;
-//    light.linearAttenuation=atenuacionLin;
-//    light.quadraticAttenuation=atenuacionCuadratica;
-
-}
-   
-void ModifyMaterial(Material &material,Tupla4f l_amb,Tupla4f l_diff, Tupla4f esp, Tupla4f em, float b )
-{
-    material.ambiental=l_amb;
-    material.difusa=l_diff;
-    material.especular=esp;
-    material.brillo=b;
-    material.emission=em;
 }
 
 
@@ -211,12 +147,7 @@ void Activate(Light l)
         glLightfv( l.lightID, GL_DIFFUSE, &l.difusa.coo[0]);
         glLightfv( l.lightID, GL_SPECULAR, &l.especular.coo[0] );
         glLightfv( l.lightID, GL_POSITION, &l.position.coo[0] );
-//        glLightfv( l.lightID, GL_SPOT_DIRECTION, &l.spotDirection.coo[0] );
-//        glLightf( l.lightID, GL_SPOT_EXPONENT,l.spotExponent );
-//        glLightf( l.lightID, GL_SPOT_CUTOFF, l.spotCutoff );
-//        glLightf( l.lightID, GL_CONSTANT_ATTENUATION, l.constantAttenuation );
-//        glLightf( l.lightID, GL_LINEAR_ATTENUATION, l.linearAttenuation );
-//        glLightf( l.lightID, GL_QUADRATIC_ATTENUATION,l.quadraticAttenuation );
+
     } 
 
 void Deactivate(Light l)
@@ -236,6 +167,7 @@ void Apply(Material m)
    float dif[4]={m.difusa.coo[0],m.difusa.coo[1],m.difusa.coo[2],m.difusa.coo[3]};
    float esp[4]={m.especular.coo[0],m.especular.coo[1],m.especular.coo[2],m.especular.coo[3]};
    float emi[4]={m.emission.coo[0],m.emission.coo[1],m.emission.coo[2],m.emission.coo[3]};
+   
         glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, ambient );
         glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, dif );
         glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, esp );
@@ -255,38 +187,12 @@ Light setSunlight(){
     sun.difusa=Tupla4f(1,1,1,1);
     sun.especular=Tupla4f(1,1,1,1);
     sun.position=Tupla4f(0,0,0,1);
-//    sun.spotDirection=Tupla3f( 0.0, 0.0, 1.0 );
-//    sun.spotExponent=0.3;
-//    sun.spotCutoff=300.0;
-//    sun.constantAttenuation=0.5;
-//    sun.linearAttenuation= 0.0;
-//    sun.quadraticAttenuation=0.0;
+
     return sun;
 }
 
 
-void DefineMaterial(Material &material){
-    
-    material.ambiental=Tupla4f(0.2, 0.2, 0.2, 1.0);
-    material.difusa=Tupla4f(0.8, 0.8, 0.8, 1.0);
-    material.especular=Tupla4f(0.0, 0.0, 0.0, 1.0);
-    material.emission=Tupla4f(0.0, 0.0, 0.0, 1.0);
-    material.brillo=0;
-    
-    
-//    mSol.ambiental=Tupla4f(0,0,0,1);
-//    mSol.difusa=Tupla4f(1,1,1,1);
-//    mSol.especular=Tupla4f(1,1,1,1);
-//
-//    mTierra.ambiental=Tupla4f(0.2, 0.2, 0.2, 1.0);
-//    mTierra.difusa=Tupla4f( 1, 1, 1, 1);
-//    mTierra.especular=Tupla4f( 1, 1, 1, 1);
-//    mTierra.emission=Tupla4f(0, 0, 0, 1);
-//    mTierra.brillo=50;
-
-}
-
-void modificaMaterial(Material &material, Tupla4f a, Tupla4f d, Tupla4f es,Tupla4f em,float brillo){
+void setMaterial(Material &material, Tupla4f a, Tupla4f d, Tupla4f es,Tupla4f em,float brillo){
 
     material.ambiental=a;
     material.difusa=d;
@@ -297,18 +203,15 @@ void modificaMaterial(Material &material, Tupla4f a, Tupla4f d, Tupla4f es,Tupla
 }
 
 
-
 void drawEarth(){
-    Material mS,mE;
-    DefineMaterial(mE);
-    modificaMaterial(mE,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0,0,0 ,0 ),20);
+    Material mE;
+    setMaterial(mE,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0,0,0,1 ),15);
     GLuint texturaTierra=LoadTexture("tc-earth_daymap.jpg");
-    cout<<"textura vale"<<texturaTierra;
+    //cout<<"textura vale"<<texturaTierra;
     glBindTexture( GL_TEXTURE_2D, texturaTierra );
     gluQuadricTexture( tierra, GL_TRUE );
     gluQuadricNormals( tierra, GLU_SMOOTH ); 
     Apply(mE);
-    //glColor3f(1,1,1);
     glRotatef( 100, 100, 0, 0 );
     gluSphere( tierra, 2.0, 360, 180 );
 
@@ -316,8 +219,7 @@ void drawEarth(){
 
 void drawMercury(){
     Material mM;
-    DefineMaterial(mM);
-    modificaMaterial(mM,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    setMaterial(mM,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0,0,0,1 ),10);
     GLuint texturaMercurio=LoadTexture("texture_mercury.jpg");
     glBindTexture( GL_TEXTURE_2D, texturaMercurio );
     gluQuadricTexture( mercurio, GL_TRUE );
@@ -330,42 +232,37 @@ void drawMercury(){
 
 void drawVenus(){
     Material mM;
-    DefineMaterial(mM);
-    modificaMaterial(mM,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    //DefineMaterial(mM);
+    setMaterial(mM,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0,0,0,1 ),15);
     GLuint texturaVenus=LoadTexture("texture_venus_atmosphere.jpg");
     glBindTexture( GL_TEXTURE_2D, texturaVenus );
     gluQuadricTexture( venus, GL_TRUE );
     gluQuadricNormals( venus, GLU_SMOOTH ); 
     Apply(mM);
-//    glRotatef( 100, 100, 0, 0 );
     gluSphere( venus, 1.5, 360, 180 );
 
 }
 
 void drawMars(){
     Material mMarte;
-    DefineMaterial(mMarte);
-    modificaMaterial(mMarte,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    setMaterial(mMarte,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0,0,0,1 ),20);
     GLuint texturaMarte=LoadTexture("texture_mars.jpg");
     glBindTexture( GL_TEXTURE_2D, texturaMarte );
     gluQuadricTexture( marte, GL_TRUE );
     gluQuadricNormals( marte, GLU_SMOOTH ); 
     Apply(mMarte);
-//    glRotatef( 100, 100, 0, 0 );
     gluSphere( marte,2, 360, 180 );
 
 }
 
 void drawJupiter(){
     Material mJ;
-    DefineMaterial(mJ);
-    modificaMaterial(mJ,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    setMaterial(mJ,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0,0,0,1 ),30);
     GLuint texturaJupiter=LoadTexture("texture_jupiter.jpg");
     glBindTexture( GL_TEXTURE_2D, texturaJupiter );
     gluQuadricTexture( jupiter, GL_TRUE );
     gluQuadricNormals( jupiter, GLU_SMOOTH ); 
     Apply(mJ);
-//    glRotatef( 100, 100, 0, 0 );
     glRotatef( 100, 100, 0, 0 );
     gluSphere( jupiter,2.5, 360, 180 );
 
@@ -373,14 +270,12 @@ void drawJupiter(){
 
 void drawSaturn(){
     Material mS;
-    DefineMaterial(mS);
-    modificaMaterial(mS,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    setMaterial(mS,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0,0,0,1 ),40);
     GLuint texturaSaturno=LoadTexture("texture_saturn.jpg");
     glBindTexture( GL_TEXTURE_2D, texturaSaturno );
     gluQuadricTexture( saturno, GL_TRUE );
     gluQuadricNormals( saturno, GLU_SMOOTH ); 
     Apply(mS);
-//    glRotatef( 100, 100, 0, 0 );
     glRotatef( 100, 100, 0, 0 );
     gluSphere( saturno,2, 360, 180 );
 
@@ -388,15 +283,12 @@ void drawSaturn(){
 
 void drawSaturnRing(){
     Material mS;
-    DefineMaterial(mS);
-    modificaMaterial(mS,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    setMaterial(mS,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0,0,0,1 ),40);
     GLuint texturaSaturnoR=LoadTexture("texture_saturn_ring.jpg");
     glBindTexture( GL_TEXTURE_2D, texturaSaturnoR );
     gluQuadricTexture( saturnoR, GL_TRUE );
     gluQuadricNormals( saturnoR, GLU_SMOOTH ); 
     Apply(mS);
-//    glRotatef( 100, 100, 0, 0 );
-    //glRotatef( 100, 100, 0, 0 );
     gluDisk( saturnoR,3-.3, 3+.3, 32, 32);
 
 }
@@ -404,14 +296,12 @@ void drawSaturnRing(){
 
 void drawUranus(){
     Material mU;
-    DefineMaterial(mU);
-    modificaMaterial(mU,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    setMaterial(mU,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0,0,0,1 ),50);
     GLuint texturaUrano=LoadTexture("texture_uranus.jpg");
     glBindTexture( GL_TEXTURE_2D, texturaUrano);
     gluQuadricTexture( urano, GL_TRUE );
     gluQuadricNormals( urano, GLU_SMOOTH ); 
     Apply(mU);
-//    glRotatef( 100, 100, 0, 0 );
     glRotatef( 100, 100, 0, 0 );
     gluSphere( urano,1.3, 360, 180 );
 
@@ -420,14 +310,11 @@ void drawUranus(){
 
 void drawNeptune(){
     Material mN;
-    DefineMaterial(mN);
-    modificaMaterial(mN,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    setMaterial(mN,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0,0,0,1 ),60);
     GLuint texturaNeptuno=LoadTexture("texture_neptune.jpg");
     glBindTexture( GL_TEXTURE_2D, texturaNeptuno);
-    gluQuadricTexture( neptuno, GL_TRUE );
-    gluQuadricNormals( neptuno, GLU_SMOOTH ); 
+    gluQuadricTexture( neptuno, GL_TRUE ); 
     Apply(mN);
-//    glRotatef( 100, 100, 0, 0 );
     glRotatef( 100, 100, 0, 0 );
     gluSphere( neptuno,1.5, 360, 180 );
 
@@ -436,17 +323,14 @@ void drawNeptune(){
 
 void drawSun(){
     
-    GLuint texturaSol=LoadTexture("texture_sun.jpg");
-//    cout<<"textura vale"<<texturaTierra;
-    glBindTexture( GL_TEXTURE_2D, texturaSol );
      Material mS;
-    DefineMaterial(mS);
-    modificaMaterial(mS,Tupla4f(1,1, 1, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(0.0, 0.0, 0.0, 1.0),10);
+    setMaterial(mS,Tupla4f(1,1, 1, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1, 1),10);
+    GLuint texturaSol=LoadTexture("texture_sun.jpg");
+    glBindTexture( GL_TEXTURE_2D, texturaSol );
     gluQuadricTexture( sol, GL_TRUE);
     gluQuadricNormals(sol, GLU_SMOOTH ); 
     Apply(mS);
     glColor3f(1,1,1);
-    //glRotatef( 100, 100, 0, 0 );
     gluSphere( sol, 1.3, 360, 180 );
     
 }
@@ -456,94 +340,67 @@ void drawSun(){
 void drawSolarSystem(float x, float y, float z, float mercurio, float venus, float tierra,
                float marte, float jupiter, float saturno,float urano, float neptuno)
 {   
-    // glMatrixMode( GL_MODELVIEW );                                           // Switch to modelview matrix mode
-    //glLoadIdentity();          
-//    glEnable( GL_LIGHTING );
     
     glEnable( GL_NORMALIZE );
     glEnable(GL_LIGHT0);
-    //glShadeModel( GL_SMOOTH );
     //glDisable(GL_COLOR_MATERIAL);
     
     glLightModelfv( GL_LIGHT_MODEL_AMBIENT, globalAmbient );
-    
-    //glEnable( GL_LIGHTING );
-  
-    
-//  glMatrixMode( GL_MODELVIEW );   
-//   glLoadIdentity();                                                      
- 
-    
-   glPushMatrix();
-    // In this simulation, the sun rotates around the earth!
-//    glRotatef( 0, 0.0f, -1.0f, 0.0f );
-//    glTranslatef( 10.0f, 0.0f, 0.0f );
-// 
+                                                            
+glPushMatrix();
+
     Light sunlight=setSunlight();
     Activate(sunlight);
     glDisable( GL_TEXTURE_2D );
     glDisable( GL_LIGHTING );
     
-    //glColor3f( 1, 1, 1 );
-    //Apply(mS);
     drawSun();
-    glPopMatrix();
+glPopMatrix();
     glEnable( GL_LIGHTING );
-   // glEnable(GL_LIGHT0);
-    glPushMatrix();
-    //glTranslatef( 0, 0, -5 );
+glPushMatrix();
     glTranslatef( 0.0f, 0.0f, -10.0f );
-    glRotatef(tierra, 1, 1, 0);
-    //glRotatef(10, 0.0f, 0.0f, -1.0f ); // Rotate the earth around it's axis
-   // glScalef( 12.756f, 12.756f, 12.756f );  // The earth's diameter is about 12,756 Km
-    
+    glRotatef(tierra, 0, 1, 0);   
     drawEarth();
- //   glEnable( GL_TEXTURE_2D );
-   // glBindTexture( GL_TEXTURE_2D, textureID );
-    //g_EarthMaterial.Apply();
-glPopMatrix();
-glPushMatrix();
-glTranslatef( 0,0,-3);
-glRotatef(mercurio, 0, 1, 0);
-drawMercury();
 glPopMatrix();
 
 glPushMatrix();
-glTranslatef( 2,0,-6);
-glRotatef(venus, 0, 1, 0);
-drawVenus();
+    glTranslatef( 3,0,0);
+    glRotatef(mercurio, 0, 1, 0);
+    drawMercury();
 glPopMatrix();
 glPushMatrix();
-glTranslatef( -3,0,-15);
-glRotatef(marte, 0, 1, 0);
- drawMars();
- glPopMatrix();
- glPushMatrix();
- glTranslatef( -5,0,-20);
- glRotatef(jupiter, 0, 1, 0);
- drawJupiter();
- glPopMatrix();
- glPushMatrix();
-  glTranslatef( 7,0,-25);
-  glRotatef(89, 1.0, 0.0, 0.0);
+    glTranslatef( 3,0,-6);
+    glRotatef(venus, 0, 1, 0);
+    drawVenus();
+glPopMatrix();
+glPushMatrix();
+    glTranslatef( -5,0,-15);
+    glRotatef(marte, 0, 1, 0);
+    drawMars();
+glPopMatrix();
+glPushMatrix();
+    glTranslatef( 0,0,-20);
+    glRotatef(jupiter, 0, 1, 0);
+    drawJupiter();
+glPopMatrix();
+glPushMatrix();
+   glTranslatef( 9,0,-25);
+   glRotatef(89, 1.0, 0.0, 0.0);
    drawSaturnRing();
-  glRotatef(saturno, 0, 1, 0);
- drawSaturn();
-  //glRotatef(89, 1.0, 0.0, 0.0);
-
- glPopMatrix();
- 
-  glPushMatrix();
-  glTranslatef( -10,0,-30);
-   glRotatef(urano, 0, 1, 0);
- drawUranus();
-  glPopMatrix();
+   glRotatef(saturno, 0, 1, 0);
+   drawSaturn();
+glPopMatrix();
+ glPushMatrix();
+  glTranslatef( -20,0,-30);
+  glRotatef(urano, 0, 1, 0);
+  drawUranus();
+glPopMatrix();
   
-  glPushMatrix();
-   glTranslatef( -15,0,-35);
-    glRotatef(neptuno, 0, 1, 0);
-   drawNeptune();
-  glPopMatrix();
+glPushMatrix();
+  glTranslatef( -15,0,-35);
+  glRotatef(neptuno, 0, 1, 0);
+  drawNeptune();
+glPopMatrix();
 }
 //**************************************************************************
 //
@@ -610,7 +467,6 @@ glEnd();
 void draw_objects()
 {
 
-   //DrawRobot(0,0,0, theta[BRAZOIZQ], theta[MANOIZQ], theta[BRAZODER],theta[MANODER], theta[PIERNAIZQ], theta[PIERNADER],theta[PELVIS],theta[TIERRA],textureID);
     drawSolarSystem(0,0,0,theta[MERCURIO],theta[VENUS],theta[TIERRA],theta[MARTE],theta[JUPITER],
             theta[SATURNO],theta[URANO],theta[NEPTUNO]);
 }
@@ -734,22 +590,7 @@ void InitQuadrics() {
   
    neptuno=gluNewQuadric();
   gluQuadricDrawStyle(neptuno,GLU_FILL);
-//  t = gluNewQuadric();
-//  gluQuadricDrawStyle(t, GLU_FILL);
-//  brazoIzq = gluNewQuadric();
-//  gluQuadricDrawStyle(brazoIzq, GLU_FILL);
-//  h = gluNewQuadric();
-//  gluQuadricDrawStyle(h, GLU_FILL);
-//  manoIzq = gluNewQuadric();
-//  gluQuadricDrawStyle(manoIzq, GLU_FILL);
-//  brazoDer = gluNewQuadric();
-//  gluQuadricDrawStyle(brazoDer, GLU_FILL);
-//  piernaIzq = gluNewQuadric();
-//  gluQuadricDrawStyle(piernaIzq, GLU_FILL);
-//  piernaDer = gluNewQuadric();
-//  gluQuadricDrawStyle(piernaDer, GLU_FILL);
-//  pelvis=gluNewQuadric();
-//  gluQuadricDrawStyle(pelvis, GLU_FILL);  
+
 }
 //***************************************************************************
 // Funcion de incializacion
