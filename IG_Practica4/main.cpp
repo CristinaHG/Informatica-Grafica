@@ -72,7 +72,7 @@ static GLfloat theta[QUIT] = {0,0 };
 
 //GLuint g_SphereDisplayList = glGenLists(1);
 //GLUquadric* pSphereQuadric;
-GLUquadricObj *sol, *mercurio, *venus, *tierra, *marte, *jupiter,*saturno, *urano, *neptuno;
+GLUquadricObj *sol, *mercurio, *venus, *tierra, *marte, *jupiter,*saturno,*saturnoR, *urano, *neptuno;
 
 GLfloat globalAmbient[] = { 1, 1, 0.2, 1.0 };
 
@@ -359,8 +359,8 @@ void drawJupiter(){
     Material mJ;
     DefineMaterial(mJ);
     modificaMaterial(mJ,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
-    GLuint texturaMarte=LoadTexture("texture_jupiter.jpg");
-    glBindTexture( GL_TEXTURE_2D, texturaMarte );
+    GLuint texturaJupiter=LoadTexture("texture_jupiter.jpg");
+    glBindTexture( GL_TEXTURE_2D, texturaJupiter );
     gluQuadricTexture( jupiter, GL_TRUE );
     gluQuadricNormals( jupiter, GLU_SMOOTH ); 
     Apply(mJ);
@@ -369,6 +369,37 @@ void drawJupiter(){
     gluSphere( jupiter,2.5, 360, 180 );
 
 }
+
+void drawSaturn(){
+    Material mS;
+    DefineMaterial(mS);
+    modificaMaterial(mS,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    GLuint texturaSaturno=LoadTexture("texture_saturn.jpg");
+    glBindTexture( GL_TEXTURE_2D, texturaSaturno );
+    gluQuadricTexture( saturno, GL_TRUE );
+    gluQuadricNormals( saturno, GLU_SMOOTH ); 
+    Apply(mS);
+//    glRotatef( 100, 100, 0, 0 );
+    glRotatef( 100, 100, 0, 0 );
+    gluSphere( saturno,2, 360, 180 );
+
+}
+
+void drawSaturnRing(){
+    Material mS;
+    DefineMaterial(mS);
+    modificaMaterial(mS,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    GLuint texturaSaturnoR=LoadTexture("texture_saturn_ring.jpg");
+    glBindTexture( GL_TEXTURE_2D, texturaSaturnoR );
+    gluQuadricTexture( saturnoR, GL_TRUE );
+    gluQuadricNormals( saturnoR, GLU_SMOOTH ); 
+    Apply(mS);
+//    glRotatef( 100, 100, 0, 0 );
+    //glRotatef( 100, 100, 0, 0 );
+    gluDisk( saturnoR,3-.3, 3+.3, 32, 32);
+
+}
+
 
 void drawSun(){
     
@@ -453,6 +484,16 @@ glTranslatef( -3,0,-15);
  glPushMatrix();
  glTranslatef( -5,0,-20);
  drawJupiter();
+ glPopMatrix();
+ glPushMatrix();
+  glTranslatef( 7,0,-25);
+  glRotatef(89, 1.0, 0.0, 0.0);
+   drawSaturnRing();
+ drawSaturn();
+//  glPopMatrix();
+// glPushMatrix();
+  //glRotatef(89, 1.0, 0.0, 0.0);
+
  glPopMatrix();
 }
 //**************************************************************************
@@ -651,6 +692,10 @@ void InitQuadrics() {
   gluQuadricDrawStyle(marte,GLU_FILL);
   jupiter=gluNewQuadric();
   gluQuadricDrawStyle(jupiter,GLU_FILL);
+    saturno=gluNewQuadric();
+  gluQuadricDrawStyle(saturno,GLU_FILL);
+      saturnoR=gluNewQuadric();
+  gluQuadricDrawStyle(saturnoR,GLU_FILL);
 //  t = gluNewQuadric();
 //  gluQuadricDrawStyle(t, GLU_FILL);
 //  brazoIzq = gluNewQuadric();
