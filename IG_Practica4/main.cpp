@@ -401,6 +401,24 @@ void drawSaturnRing(){
 }
 
 
+void drawUranus(){
+    Material mU;
+    DefineMaterial(mU);
+    modificaMaterial(mU,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    GLuint texturaUrano=LoadTexture("texture_uranus.jpg");
+    glBindTexture( GL_TEXTURE_2D, texturaUrano);
+    gluQuadricTexture( urano, GL_TRUE );
+    gluQuadricNormals( urano, GLU_SMOOTH ); 
+    Apply(mU);
+//    glRotatef( 100, 100, 0, 0 );
+    glRotatef( 100, 100, 0, 0 );
+    gluSphere( urano,1.3, 360, 180 );
+
+}
+
+
+
+
 void drawSun(){
     
     GLuint texturaSol=LoadTexture("texture_sun.jpg");
@@ -490,11 +508,14 @@ glTranslatef( -3,0,-15);
   glRotatef(89, 1.0, 0.0, 0.0);
    drawSaturnRing();
  drawSaturn();
-//  glPopMatrix();
-// glPushMatrix();
   //glRotatef(89, 1.0, 0.0, 0.0);
 
  glPopMatrix();
+ 
+  glPushMatrix();
+  glTranslatef( -10,0,-30);
+ drawUranus();
+  glPopMatrix();
 }
 //**************************************************************************
 //
@@ -696,6 +717,9 @@ void InitQuadrics() {
   gluQuadricDrawStyle(saturno,GLU_FILL);
       saturnoR=gluNewQuadric();
   gluQuadricDrawStyle(saturnoR,GLU_FILL);
+  
+   urano=gluNewQuadric();
+  gluQuadricDrawStyle(urano,GLU_FILL);
 //  t = gluNewQuadric();
 //  gluQuadricDrawStyle(t, GLU_FILL);
 //  brazoIzq = gluNewQuadric();
