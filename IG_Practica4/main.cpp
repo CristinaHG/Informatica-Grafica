@@ -341,17 +341,17 @@ void drawVenus(){
 
 }
 
-void drawVenus(){
-    Material mM;
-    DefineMaterial(mM);
-    modificaMaterial(mM,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
-    GLuint texturaVenus=LoadTexture("texture_venus_atmosphere.jpg");
-    glBindTexture( GL_TEXTURE_2D, texturaVenus );
-    gluQuadricTexture( venus, GL_TRUE );
-    gluQuadricNormals( venus, GLU_SMOOTH ); 
-    Apply(mM);
+void drawMars(){
+    Material mMarte;
+    DefineMaterial(mMarte);
+    modificaMaterial(mMarte,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    GLuint texturaMarte=LoadTexture("texture_mars.jpg");
+    glBindTexture( GL_TEXTURE_2D, texturaMarte );
+    gluQuadricTexture( marte, GL_TRUE );
+    gluQuadricNormals( marte, GLU_SMOOTH ); 
+    Apply(mMarte);
 //    glRotatef( 100, 100, 0, 0 );
-    gluSphere( venus, 1.5, 360, 180 );
+    gluSphere( marte,2, 360, 180 );
 
 }
 
@@ -412,7 +412,7 @@ void RenderScene()
    // glEnable(GL_LIGHT0);
     glPushMatrix();
     //glTranslatef( 0, 0, -5 );
-    glTranslatef( 0.0f, 0.0f, -20.0f );
+    glTranslatef( 0.0f, 0.0f, -10.0f );
    
     //glRotatef(10, 0.0f, 0.0f, -1.0f ); // Rotate the earth around it's axis
    // glScalef( 12.756f, 12.756f, 12.756f );  // The earth's diameter is about 12,756 Km
@@ -423,15 +423,18 @@ void RenderScene()
     //g_EarthMaterial.Apply();
 glPopMatrix();
 glPushMatrix();
-glTranslatef( 0,0,-5);
+glTranslatef( 0,0,-3);
 drawMercury();
 glPopMatrix();
 
 glPushMatrix();
-glTranslatef( 2,0,-10);
+glTranslatef( 2,0,-6);
 drawVenus();
 glPopMatrix();
-    
+glPushMatrix();
+glTranslatef( -3,0,-15);
+ drawMars();
+ glPopMatrix();
 }
 //**************************************************************************
 //
@@ -625,6 +628,8 @@ void InitQuadrics() {
   gluQuadricDrawStyle(mercurio,GLU_FILL);
   venus=gluNewQuadric();
   gluQuadricDrawStyle(venus,GLU_FILL);
+  marte=gluNewQuadric();
+  gluQuadricDrawStyle(marte,GLU_FILL);
 //  t = gluNewQuadric();
 //  gluQuadricDrawStyle(t, GLU_FILL);
 //  brazoIzq = gluNewQuadric();
