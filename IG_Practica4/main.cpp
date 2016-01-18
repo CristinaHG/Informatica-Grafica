@@ -52,23 +52,24 @@ int UI_window_pos_x=50,UI_window_pos_y=50,UI_window_width=500,UI_window_height=5
 //piezas móviles
 enum {
     SOL,
+  MERCURIO,
+  VENUS,
   TIERRA,
+  MARTE,
+  JUPITER,
+  SATURNO,
+  ANILLO,
+  URANO,
+  NEPTUNO,
   QUIT
 };
 
 //variables de tamaño
-#define CABEZA 3.0
-#define TORSO 3.0
-#define BRAZO 2.0
-#define MANO 1.0
-#define PIERNA 2.0
-#define PELVIS_SIZE 1.0
-
 
 //GLUquadricObj *t, *h, *brazoIzq, *manoIzq, *brazoDer, *manoDer,*piernaIzq, *piernaDer, *pelvis;
 
 //angulo inicial
-static GLfloat theta[QUIT] = {0,0 };
+static GLfloat theta[QUIT] = {0,0,0,0, 0, 0, 0,0, 0.0, 0.0 };
 
 //GLuint g_SphereDisplayList = glGenLists(1);
 //GLUquadric* pSphereQuadric;
@@ -452,7 +453,8 @@ void drawSun(){
 
 
 
-void RenderScene()
+void drawSolarSystem(float x, float y, float z, float mercurio, float venus, float tierra,
+               float marte, float jupiter, float saturno,float urano, float neptuno)
 {   
     // glMatrixMode( GL_MODELVIEW );                                           // Switch to modelview matrix mode
     //glLoadIdentity();          
@@ -491,7 +493,7 @@ void RenderScene()
     glPushMatrix();
     //glTranslatef( 0, 0, -5 );
     glTranslatef( 0.0f, 0.0f, -10.0f );
-   
+    glRotatef(tierra, 1, 1, 0);
     //glRotatef(10, 0.0f, 0.0f, -1.0f ); // Rotate the earth around it's axis
    // glScalef( 12.756f, 12.756f, 12.756f );  // The earth's diameter is about 12,756 Km
     
@@ -502,25 +504,30 @@ void RenderScene()
 glPopMatrix();
 glPushMatrix();
 glTranslatef( 0,0,-3);
+glRotatef(mercurio, 0, 1, 0);
 drawMercury();
 glPopMatrix();
 
 glPushMatrix();
 glTranslatef( 2,0,-6);
+glRotatef(venus, 0, 1, 0);
 drawVenus();
 glPopMatrix();
 glPushMatrix();
 glTranslatef( -3,0,-15);
+glRotatef(marte, 0, 1, 0);
  drawMars();
  glPopMatrix();
  glPushMatrix();
  glTranslatef( -5,0,-20);
+ glRotatef(jupiter, 0, 1, 0);
  drawJupiter();
  glPopMatrix();
  glPushMatrix();
   glTranslatef( 7,0,-25);
   glRotatef(89, 1.0, 0.0, 0.0);
    drawSaturnRing();
+  glRotatef(saturno, 0, 1, 0);
  drawSaturn();
   //glRotatef(89, 1.0, 0.0, 0.0);
 
@@ -528,11 +535,13 @@ glTranslatef( -3,0,-15);
  
   glPushMatrix();
   glTranslatef( -10,0,-30);
+   glRotatef(urano, 0, 1, 0);
  drawUranus();
   glPopMatrix();
   
   glPushMatrix();
    glTranslatef( -15,0,-35);
+    glRotatef(neptuno, 0, 1, 0);
    drawNeptune();
   glPopMatrix();
 }
@@ -602,7 +611,8 @@ void draw_objects()
 {
 
    //DrawRobot(0,0,0, theta[BRAZOIZQ], theta[MANOIZQ], theta[BRAZODER],theta[MANODER], theta[PIERNAIZQ], theta[PIERNADER],theta[PELVIS],theta[TIERRA],textureID);
-    RenderScene();
+    drawSolarSystem(0,0,0,theta[MERCURIO],theta[VENUS],theta[TIERRA],theta[MARTE],theta[JUPITER],
+            theta[SATURNO],theta[URANO],theta[NEPTUNO]);
 }
 //**************************************************************************
 //
@@ -641,49 +651,31 @@ void normal_keys(unsigned char Tecla1,int x,int y){
 //if (toupper(Tecla1)=='Q') exit(0);
     
   switch (Tecla1) {
-//    case 'q':
-//      theta[BRAZOIZQ] += 5;
-//      break;
-//    case 'w':
-//      theta[BRAZOIZQ] -= 5;
-//      break;
-//    case 'e':
-//      theta[MANOIZQ] += 5;
-//      break;
-//    case 'r':
-//      theta[MANOIZQ] -= 5;
-//      break;
-//    case 'a':
-//      theta[BRAZODER] += 5;
-//      break;
-//    case 's':
-//      theta[BRAZODER] -= 5;
-//      break;
-//    case 'd':
-//      theta[MANODER] += 5;
-//      break;
-//    case 'f':
-//      theta[MANODER] -= 5;
-//      break;
-//    case 't':
-//      theta[PIERNAIZQ] += 5;
-//      break;
-//    case 'y':
-//      theta[PIERNAIZQ] -= 5;
-//      break;
-//    case 'k':
-//          theta[PELVIS] += 5;
-//      break;
-//    case 'l':
-//        theta[PELVIS] -=5;
-//      break;
-//          
-//    case 'g':
-//      theta[PIERNADER] += 5;
-//      break;
-//    case 'h':
-//      theta[PIERNADER] -= 5;
-//      break;
+    case 'q':
+      theta[MERCURIO] += 5;
+      break;
+    case 'w':
+      theta[VENUS] += 5;
+      break;
+    case 'a':
+      theta[TIERRA] += 5;
+      break;
+    case 's':
+      theta[MARTE] += 5;
+      break;
+    case 'd':
+      theta[JUPITER] += 5;
+      break;
+    case 'f':
+      theta[SATURNO] += 5;
+      break;
+    case 't':
+      theta[URANO] += 5;
+      break;
+    case 'y':
+      theta[NEPTUNO] += 5;
+     break;
+
     case 'p':
       exit(0);
   }
