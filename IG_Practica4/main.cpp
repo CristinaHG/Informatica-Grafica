@@ -355,6 +355,21 @@ void drawMars(){
 
 }
 
+void drawJupiter(){
+    Material mJ;
+    DefineMaterial(mJ);
+    modificaMaterial(mJ,Tupla4f(0.2, 0.2, 0.2, 1.0), Tupla4f( 1, 1, 1, 1),Tupla4f( 1, 1, 1, 1),Tupla4f(1,1,1,1 ),20);
+    GLuint texturaMarte=LoadTexture("texture_jupiter.jpg");
+    glBindTexture( GL_TEXTURE_2D, texturaMarte );
+    gluQuadricTexture( jupiter, GL_TRUE );
+    gluQuadricNormals( jupiter, GLU_SMOOTH ); 
+    Apply(mJ);
+//    glRotatef( 100, 100, 0, 0 );
+    glRotatef( 100, 100, 0, 0 );
+    gluSphere( jupiter,2.5, 360, 180 );
+
+}
+
 void drawSun(){
     
     GLuint texturaSol=LoadTexture("texture_sun.jpg");
@@ -434,6 +449,10 @@ glPopMatrix();
 glPushMatrix();
 glTranslatef( -3,0,-15);
  drawMars();
+ glPopMatrix();
+ glPushMatrix();
+ glTranslatef( -5,0,-20);
+ drawJupiter();
  glPopMatrix();
 }
 //**************************************************************************
@@ -630,6 +649,8 @@ void InitQuadrics() {
   gluQuadricDrawStyle(venus,GLU_FILL);
   marte=gluNewQuadric();
   gluQuadricDrawStyle(marte,GLU_FILL);
+  jupiter=gluNewQuadric();
+  gluQuadricDrawStyle(jupiter,GLU_FILL);
 //  t = gluNewQuadric();
 //  gluQuadricDrawStyle(t, GLU_FILL);
 //  brazoIzq = gluNewQuadric();
